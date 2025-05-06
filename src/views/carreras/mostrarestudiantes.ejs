@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+
+<!-- Contenedor principal -->
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <%- include('../partials/sidebar') %>
+
+    <!-- Contenido principal -->
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+      <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+      >
+        <h1 class="h2">Practicantes de la Carrera</h1>
+        <a href="/carreras" class="btn btn-secondary btn-lg"
+          >Volver al Listado de Carreras</a
+        >
+      </div>
+
+      <!-- Listado de practicantes -->
+      <div class="row g-4">
+        <% practicantes.forEach(practicante => { %>
+        <div class="col-md-4">
+          <div class="card shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title"><%= practicante.nombre %></h5>
+              <p class="card-text">Email: <%= practicante.email %></p>
+              <p class="card-text">
+                Fecha de inicio: <%= practicante.fecha_inicio ? practicante.fecha_inicio.toISOString().split('T')[0] : 'No especificada' %>
+              </p>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </main>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

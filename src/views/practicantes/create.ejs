@@ -1,0 +1,110 @@
+<%- include('../partials/header') %>
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-auto p-0 bg-light border-end">
+      <%- include('../partials/sidebar') %>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col px-4">
+      <main class="py-4">
+        <!-- Encabezado -->
+        <div class="mb-4">
+          <h1 class="text-primary"><i class="bi bi-person-plus me-2"></i> Agregar Nuevo Practicante</h1>
+          <p class="text-muted">Completa el formulario para registrar un nuevo practicante en el sistema.</p>
+        </div>
+
+        <!-- Formulario para agregar un nuevo practicante -->
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <form action="/practicantes/create" method="POST" class="needs-validation" novalidate>
+              <!-- Nombre -->
+              <div class="form-group mb-3">
+                <label for="nombre" class="form-label">Nombre del practicante:</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  class="form-control"
+                  placeholder="Ingresa el nombre del practicante"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, ingresa el nombre del practicante.</div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group mb-3">
+                <label for="email" class="form-label">Email del practicante:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Ingresa el email del practicante"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, ingresa un email válido.</div>
+              </div>
+
+              <!-- Carrera -->
+              <div class="form-group mb-3">
+                <label for="carreraId" class="form-label">Carrera:</label>
+                <select id="carreraId" name="carreraId" class="form-select" required>
+                  <option value="">Selecciona una carrera</option>
+                  <% carreras.forEach(carrera => { %>
+                  <option value="<%= carrera.id %>"><%= carrera.nombre %></option>
+                  <% }) %>
+                </select>
+                <div class="invalid-feedback">Por favor, selecciona una carrera.</div>
+              </div>
+
+              <!-- Fecha de inicio -->
+              <div class="form-group mb-3">
+                <label for="fecha_inicio" class="form-label">Fecha de inicio:</label>
+                <input
+                  type="date"
+                  id="fecha_inicio"
+                  name="fecha_inicio"
+                  class="form-control"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, selecciona una fecha de inicio.</div>
+              </div>
+
+              <!-- Botones -->
+              <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                  <i class="bi bi-check-circle"></i> Guardar
+                </button>
+                <a href="/practicantes" class="btn btn-secondary btn-lg">
+                  <i class="bi bi-arrow-left-circle"></i> Cancelar
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+
+<script>
+  // Validación de formulario con Bootstrap
+  (function () {
+    'use strict';
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  })();
+</script>

@@ -1,0 +1,70 @@
+<%- include('../partials/header') %>
+
+<!-- Contenedor principal -->
+<div class="container-fluid">
+    <div class="row">
+    <!-- Sidebar -->
+            <%- include('../partials/sidebar') %>
+
+        <!-- Contenido principal -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Editar Practicante</h1>
+    </div>
+
+    <!-- Formulario para editar practicante -->
+        <form action="/practicantes/<%= practicante.id %>?_method=PUT" method="POST" class="row g-4">
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input 
+                type="text" 
+                class="form-control" 
+                id="nombre" 
+                name="nombre" 
+                value="<%= practicante.nombre %>" 
+                required
+                >
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Correo</label>
+                <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                name="email" 
+                value="<%= practicante.email %>" 
+                required
+                >
+            </div>
+            <div class="col-md-6">
+                <label for="id_carrera" class="form-label">Carrera</label>
+                <select class="form-select" id="id_carrera" name="carrera_id" required>
+                    <option value="">Selecciona una carrera</option>
+                    <% carreras.forEach(c => { %>
+                        <option value="<%= c.id %>" <%= practicante.carrera_id == c.id ? 'selected' : '' %>><%= c.nombre %></option>
+                    <% }) %>
+                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fecha_inicio" class="form-label">Fecha de inicio</label>
+                                <input 
+                                    type="date" 
+                                    class="form-control" 
+                                    id="fecha_inicio" 
+                                    name="fecha_inicio" 
+                                    value="<%= practicante.fecha_inicio ? new Date(practicante.fecha_inicio).toISOString().split('T')[0] : '' %>" 
+                                    required
+                                >
+                            </div>
+            <div class="col-12 d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">Actualizar</button>
+                <a href="/practicantes" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</div>
+</div>
+
+<%- include('../partials/footer') %>
+
+

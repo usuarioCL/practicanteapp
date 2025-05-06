@@ -1,0 +1,40 @@
+/* Fondo de la página */
+body {
+  background: linear-gradient(135deg, #007bff, #e3f2fd);
+  color: #000;
+  font-family: "Arial", sans-serif;
+}
+
+/* Tarjeta del formulario */
+.card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Campos de entrada */
+.form-control {
+  border-radius: 10px;
+  border: 1px solid #007bff;
+}
+
+/* Botón de inicio de sesión */
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  border-radius: 10px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Enlace interactivo */
+.text-decoration-none {
+  color: #007bff;
+}
+
+.text-decoration-none:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}

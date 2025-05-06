@@ -1,0 +1,67 @@
+<%- include('./partials/header') %>
+
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <!-- Sidebar -->
+    <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
+      <%- include('./partials/sidebar') %>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col px-4">
+      <main class="py-4">
+        <!-- Encabezado -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="text-primary"><i class="bi bi-list-ul me-2"></i> Listado de Carreras</h1>
+          <a href="/carreras/create" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle"></i> Agregar Nueva Carrera
+          </a>
+        </div>
+
+        <!-- Listado de carreras en tarjetas -->
+        <div class="row g-4">
+          <% if (carreras.length > 0) { %>
+            <% carreras.forEach(carrera => { %>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                  <h5 class="card-title text-primary"><%= carrera.nombre %></h5>
+                  <p class="card-text">ID: <%= carrera.id %></p>
+                  <div class="d-flex justify-content-between mt-3">
+                    <a href="/carreras/mostrarestudiantes/<%= carrera.id %>" class="btn btn-info btn-sm">
+                      <i class="bi bi-people-fill"></i> Ver Practicantes
+                    </a>
+                    <a href="/carreras/edit/<%= carrera.id %>" class="btn btn-warning btn-sm">
+                      <i class="bi bi-pencil-square"></i> Editar
+                    </a>
+                    <form action="/carreras/delete/<%= carrera.id %>" method="POST" style="display: inline;">
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="bi bi-trash"></i> Eliminar
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }); %>
+          <% } else { %>
+            <div class="col-12">
+              <div class="alert alert-warning text-center" role="alert">
+                No hay carreras registradas. <a href="/carreras/create" class="alert-link">Agrega una nueva carrera</a>.
+              </div>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Botón para volver al Dashboard -->
+        <div class="text-center mt-5">
+          <a href="/dashboard" class="btn btn-secondary btn-lg">
+            <i class="bi bi-arrow-left-circle"></i> Volver al Dashboard
+          </a>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

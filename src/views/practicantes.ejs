@@ -1,0 +1,115 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <!-- Sidebar -->
+    <div
+      class="col-auto p-0 bg-light collapse d-md-block border-end"
+      id="sidebarContent"
+    >
+      <%- include('partials/sidebar') %>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col px-4">
+      <main class="py-4">
+        <!-- Encabezado -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h1 class="text-primary">
+            <i class="bi bi-people-fill me-2"></i> Listado de Practicantes
+          </h1>
+          <a href="/practicantes/create" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle"></i> Agregar Nuevo Practicante
+          </a>
+        </div>
+
+        <!-- Tarjeta de la tabla -->
+        <div class="card shadow-sm">
+          <div
+            class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+          >
+            <h5 class="mb-0">
+              <i class="bi bi-table me-2"></i> Practicantes Registrados
+            </h5>
+            <span class="badge bg-light text-primary fs-6"
+              ><%= practicantes.length %> Practicantes</span
+            >
+          </div>
+          <div class="card-body">
+            
+            <!-- Tabla de practicantes -->
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered align-middle">
+                <thead class="table-primary text-center">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Carrera</th>
+                    <th scope="col">Fecha de Inicio</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (practicantes.length > 0) { %> <%
+                  practicantes.forEach((practicante, index) => { %>
+                  <tr>
+                    <th scope="row" class="text-center"><%= index + 1 %></th>
+                    <td><%= practicante.nombre %></td>
+                    <td><%= practicante.email %></td>
+                    <td><%= practicante.carrera_nombre %></td>
+                    <td class="text-center">
+                      <%= practicante.fecha_inicio ? new
+                      Date(practicante.fecha_inicio).toISOString().split('T')[0]
+                      : 'No especificada' %>
+                    </td>
+                    <td class="text-center">
+                      <a
+                        href="/practicantes/edit/<%= practicante.id %>"
+                        class="btn btn-warning btn-sm me-2"
+                        title="Editar"
+                      >
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
+                      <form
+                        action="/practicantes/<%= practicante.id %>?_method=DELETE"
+                        method="POST"
+                        style="display: inline"
+                      >
+                        <button
+                          type="submit"
+                          class="btn btn-danger btn-sm"
+                          title="Eliminar"
+                          onclick="return confirm('¿Estás seguro de que deseas eliminar este practicante?')"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <% }); %> <% } else { %>
+                  <tr>
+                    <td colspan="6" class="text-center text-muted">
+                      No hay practicantes registrados.
+                    </td>
+                  </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botón para volver al Dashboard -->
+        <div class="text-center mt-5">
+          <a href="/dashboard" class="btn btn-secondary btn-lg">
+            <i class="bi bi-arrow-left-circle"></i> Volver al Dashboard
+          </a>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

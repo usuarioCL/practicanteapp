@@ -1,0 +1,110 @@
+<%- include('../partials/header') %>
+
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <!-- Sidebar -->
+    <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
+      <%- include('../partials/sidebar') %>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col px-4">
+      <main class="py-4">
+        <!-- Encabezado -->
+        <div class="mb-4">
+          <h1 class="text-primary"><i class="bi bi-person-plus me-2"></i> Registrar Nuevo Usuario</h1>
+          <p class="text-muted">Completa el formulario para agregar un nuevo usuario al sistema.</p>
+        </div>
+
+        <!-- Formulario para registrar un nuevo usuario -->
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-person-fill-add me-2"></i> Formulario de Registro</h5>
+          </div>
+          <div class="card-body">
+            <form action="/usuarios/create" method="POST" class="needs-validation" novalidate>
+              <!-- Nombre -->
+              <div class="form-group mb-3">
+                <label for="nombre" class="form-label">Nombre del Usuario:</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  class="form-control"
+                  placeholder="Ingresa el nombre del usuario"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, ingresa el nombre del usuario.</div>
+              </div>
+
+              <!-- Correo Electrónico -->
+              <div class="form-group mb-3">
+                <label for="email" class="form-label">Correo Electrónico:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="Ingresa el correo electrónico"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, ingresa un correo electrónico válido.</div>
+              </div>
+
+              <!-- Contraseña -->
+              <div class="form-group mb-3">
+                <label for="password" class="form-label">Contraseña:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  placeholder="Ingresa la contraseña"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, ingresa una contraseña.</div>
+              </div>
+
+              <!-- Confirmar Contraseña -->
+              <div class="form-group mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña:</label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  class="form-control"
+                  placeholder="Confirma la contraseña"
+                  required
+                />
+                <div class="invalid-feedback">Por favor, confirma la contraseña.</div>
+              </div>
+
+              <!-- Rol -->
+              <div class="form-group mb-3">
+                <label for="rol" class="form-label">Rol:</label>
+                <select id="rol" name="rol" class="form-select" required>
+                  <option value="">Selecciona un rol</option>
+                  <option value="admin">Administrador</option>
+                  <option value="practicante">Practicante</option>
+                </select>
+                <div class="invalid-feedback">Por favor, selecciona un rol.</div>
+              </div>
+
+              <!-- Botones -->
+              <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                  <i class="bi bi-person-plus"></i> Registrar
+                </button>
+                <a href="/usuarios" class="btn btn-secondary btn-lg">
+                  <i class="bi bi-arrow-left-circle"></i> Cancelar
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
