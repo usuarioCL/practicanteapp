@@ -1,5 +1,5 @@
-const Practicante = require('../models/practicanteModel'); // Modelo de practicante
-const Carrera = require('../models/carreraModel'); // Modelo de carrera
+const Practicante = require('../models/practicanteModel');
+const Carrera = require('../models/carreraModel');
 
 // Obtener todos los practicantes
 const getPracticantes = async (req, res) => {

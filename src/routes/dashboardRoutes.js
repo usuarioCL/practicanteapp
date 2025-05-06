@@ -7,12 +7,12 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
-    res.redirect('/login'); // Redirige al login si no está autenticado
+    res.redirect('/login'); 
 }
 
 // Ruta para el dashboard
 router.get('/', ensureAuthenticated, (req, res) => {
-    const usuario = req.user; // Obtén el usuario autenticado desde la sesión
+    const usuario = req.user; 
     res.render('dashboard', { usuario , activePage: 'dashboard' });
 });
 

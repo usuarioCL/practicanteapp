@@ -1,4 +1,4 @@
-const Usuario = require('../models/usuarioModel'); // Modelo de usuario
+const Usuario = require('../models/usuarioModel');
 const bcrypt = require('bcryptjs');
 
 const authController = {
@@ -31,10 +31,10 @@ const authController = {
             if (err) {
                 console.error('Error al cerrar sesión:', err);
                 req.flash('error', 'Hubo un error al cerrar sesión.');
-                return res.redirect('/dashboard'); // Si hay un error, redirige al dashboard
+                return res.redirect('/dashboard');
             }
             req.flash('success', 'Sesión cerrada exitosamente.');
-            res.redirect('/'); // Redirige al login después de cerrar sesión
+            res.redirect('/');
         });
     }
 };

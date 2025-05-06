@@ -1,12 +1,12 @@
-// src/models/carreraModel.js
-const db = require('../config/bd'); // Conexión a la base de datos
+const db = require('../config/bd');
 
 const Carrera = {
     // Método para obtener todas las carreras
     async findAll() {
-        const [result] = await db.query('SELECT id, nombre FROM carreras'); // Consulta para obtener las carreras
-        return result; // Retorna el resultado de la consulta
+        const [result] = await db.query('SELECT id, nombre FROM carreras'); 
+        return result; 
     },
+    
     // Método para obtener una carrera por ID
     findById: async (id) => {
         const [rows] = await db.query('SELECT * FROM carreras WHERE id = ?', [id]);

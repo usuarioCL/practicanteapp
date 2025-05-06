@@ -1,13 +1,13 @@
 // Serialización del usuario
 passport.serializeUser((user, done) => {
-    done(null, user.id); // Serializa solo el ID del usuario
+    done(null, user.id);
 });
 
 // Deserialización del usuario
 passport.deserializeUser(async (id, done) => {
     try {
-        const user = await User.findById(id); // Asegúrate de que este método obtenga al usuario completo, incluyendo el campo `rol`
-        done(null, user); // Agrega el usuario completo a req.user
+        const user = await User.findById(id);
+        done(null, user);
     } catch (err) {
         done(err, null);
     }

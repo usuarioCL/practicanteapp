@@ -1,6 +1,5 @@
-// src/models/usuarioModel.js
 const bcrypt = require('bcryptjs');
-const db = require('../config/bd'); // Conexión con promesas
+const db = require('../config/bd'); 
 
 const Usuario = {
 
@@ -27,7 +26,7 @@ const Usuario = {
 
     async findAll() {
         const [rows] = await db.query('SELECT * FROM usuarios');
-        return rows; // Retorna todos los usuarios
+        return rows; 
     },
 };
 

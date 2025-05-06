@@ -1,11 +1,11 @@
-const Carrera = require('../models/carreraModel'); // Modelo para manejar las carreras
-const Practicante = require('../models/practicanteModel'); // Modelo para manejar los practicantes
+const Carrera = require('../models/carreraModel');
+const Practicante = require('../models/practicanteModel');
 
 const carreraController = {
     // Listar todas las carreras
     list: async (req, res) => {
         try {
-            const carreras = await Carrera.findAll(); // Método para obtener todas las carreras
+            const carreras = await Carrera.findAll();
             res.render('carreras', { title: 'Gestionar Carreras', carreras, activePage: 'carreras' });
         } catch (err) {
             res.status(500).send('Error al listar las carreras: ' + err.message);
@@ -15,7 +15,7 @@ const carreraController = {
     // Mostrar una carrera específica
     show: async (req, res) => {
         try {
-            const carrera = await Carrera.findById(req.params.id); // Método para obtener una carrera por ID
+            const carrera = await Carrera.findById(req.params.id);
             if (!carrera) {
                 return res.status(404).send('Carrera no encontrada.');
             }
@@ -67,7 +67,7 @@ const carreraController = {
     // Eliminar una carrera
     delete: async (req, res) => {
         try {
-            await Carrera.delete(req.params.id); // Método para eliminar una carrera por ID
+            await Carrera.delete(req.params.id);
             res.redirect('/carreras');
         } catch (err) {
             res.status(500).send('Error al eliminar la carrera: ' + err.message);
@@ -77,8 +77,8 @@ const carreraController = {
     // Obtener practicantes por carrera
     getPracticantesByCarrera: async (req, res) => {
         try {
-            const carreraId = req.params.id; // Obtén el ID de la carrera desde los parámetros de la URL
-            const practicantes = await Practicante.findByCarrera(carreraId); // Obtén los practicantes de la carrera
+            const carreraId = req.params.id;
+            const practicantes = await Practicante.findByCarrera(carreraId); 
             if (!practicantes || practicantes.length === 0) {
                 return res.status(404).send('No se encontraron practicantes para esta carrera.');
             }

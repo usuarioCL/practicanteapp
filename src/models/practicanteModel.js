@@ -1,4 +1,4 @@
-const db = require('../config/bd'); // Conexión con promesas
+const db = require('../config/bd');
 
 const Practicante = {
     // Función para obtener todos los practicantes
@@ -16,6 +16,7 @@ const Practicante = {
         return result;
     },
 
+    // Función para obtener todos los practicantes de una carrera específica
     async findByCarrera(carreraId) {
         const [result] = await db.query(`
             SELECT 
@@ -28,13 +29,13 @@ const Practicante = {
             JOIN carreras ON practicantes.carrera_id = carreras.id
             WHERE carreras.id = ?
         `, [carreraId]);
-        return result; // Retorna los practicantes de la carrera
+        return result; 
     },
 
     // Función para obtener un practicante por su ID
     async findById(id) {
         const [result] = await db.query('SELECT * FROM practicantes WHERE id = ?', [id]);
-        return result[0]; // Retorna el primer practicante encontrado
+        return result[0]; 
     },
 
     // Función para crear un nuevo practicante
@@ -57,7 +58,7 @@ const Practicante = {
     // Función para eliminar un practicante
     async delete(id) {
         const [result] = await db.query('DELETE FROM practicantes WHERE id = ?', [id]);
-        return result.affectedRows > 0; // Retorna true si se eliminó un registro
+        return result.affectedRows > 0;
     },
 };
 
