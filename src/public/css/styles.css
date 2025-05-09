@@ -1,1 +1,6 @@
 
+.card-img-custom {
+    width: auto;
+    height: 200px;
+    object-fit: cover; /* Ajusta la imagen para que encaje sin deformarse */
+  }

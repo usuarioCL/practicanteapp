@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
 // Ruta para procesar el inicio de sesión
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/dashboard', 
-    failureRedirect: '/login', 
+    failureRedirect: '/', 
     failureFlash: true 
 }));
 

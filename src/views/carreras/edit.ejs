@@ -2,37 +2,62 @@
 
 <!-- Contenedor principal -->
 <div class="container-fluid">
-  <div class="row">
+  <div class="row flex-nowrap">
     <!-- Sidebar -->
-    <%- include('../partials/sidebar') %>
+    <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
+      <%- include('../partials/sidebar') %>
+    </div>
 
     <!-- Contenido principal -->
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 content">
-      <div
-        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
-      >
-        <h1 class="h2">Editar Carrera</h1>
-      </div>
+    <div class="col px-4">
+      <main class="py-4">
+        <div
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+        >
+          <h1 class="h2">Editar Carrera</h1>
+        </div>
 
-      <!-- Formulario para editar carrera -->
-      <form action="/carreras/update/<%= carrera.id %>"method="POST"class="mt-4">
-        <div class="form-group mb-3">
-          <label for="nombre" class="form-label">Nombre de la carrera:</label>
-          <input
-            type="text"
-            id="nombre"
-            name="nombre"
-            class="form-control"
-            value="<%= carrera.nombre %>"
-            required
-          />
-        </div>
-        <div class="d-flex justify-content-between">
-          <button type="submit" class="btn btn-success">Actualizar</button>
-          <a href="/carreras" class="btn btn-secondary">Volver al listado</a>
-        </div>
-      </form>
-    </main>
+        <!-- Formulario para editar carrera -->
+        <form action="/carreras/update/<%= carrera.id %>" method="POST" enctype="multipart/form-data" class="mt-4">
+          <div class="form-group mb-3">
+            <label for="nombre" class="form-label">Nombre de la carrera:</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              class="form-control"
+              value="<%= carrera.nombre %>"
+              required
+            />
+          </div>
+
+          <!-- Mostrar la imagen actual -->
+          <div class="form-group mb-3">
+            <label class="form-label">Imagen actual:</label>
+            <div>
+              <img src="/images/carreras/<%= carrera.imagen %>" alt="<%= carrera.nombre %>" class="img-thumbnail" style="width: 200px; height: 150px; object-fit: cover;">
+            </div>
+          </div>
+
+          <!-- Campo para subir una nueva imagen -->
+          <div class="form-group mb-3">
+            <label for="imagen" class="form-label">Nueva imagen (opcional):</label>
+            <input
+              type="file"
+              id="imagen"
+              name="imagen"
+              class="form-control"
+              accept="image/*"
+            />
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Actualizar</button>
+            <a href="/carreras" class="btn btn-secondary">Volver al listado</a>
+          </div>
+        </form>
+      </main>
+    </div>
   </div>
 </div>
 

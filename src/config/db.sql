@@ -51,3 +51,6 @@ CREATE TABLE evidencias (
         ON DELETE CASCADE
 );
 
+-- ed
+-- ed@ed.com
+-- $10$EAZZ4LYqfdStZe7nK5Se7.JieWbFxdAthVCrwFFHNRcjZ0RGZHAB.

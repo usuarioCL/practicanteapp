@@ -3,7 +3,7 @@ const db = require('../config/bd');
 const Carrera = {
     // Método para obtener todas las carreras
     async findAll() {
-        const [result] = await db.query('SELECT id, nombre FROM carreras'); 
+        const [result] = await db.query('SELECT id, nombre, imagen FROM carreras'); 
         return result; 
     },
     
@@ -14,13 +14,17 @@ const Carrera = {
     },
 
     // Método para crear una nueva carrera
-    create: async (nombre) => {
-        await db.query('INSERT INTO carreras (nombre) VALUES (?)', [nombre]);
+    create: async (nombre, imagen) => {
+        await db.query('INSERT INTO carreras (nombre, imagen) VALUES (?, ?)', [nombre, imagen]);
     },
 
     // Método para actualizar una carrera existente
-    update: async (id, nombre) => {
-        await db.query('UPDATE carreras SET nombre = ? WHERE id = ?', [nombre, id]);
+    update: async (id, nombre, imagen = null) => {
+        if (imagen) {
+            await db.query('UPDATE carreras SET nombre = ?, imagen = ? WHERE id = ?', [nombre, imagen, id]);
+        } else {
+            await db.query('UPDATE carreras SET nombre = ? WHERE id = ?', [nombre, id]);
+        }
     },
 
     // Método para eliminar una carrera

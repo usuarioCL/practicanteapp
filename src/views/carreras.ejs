@@ -1,9 +1,13 @@
 <%- include('./partials/header') %>
 
+<!-- Contenedor principal -->
 <div class="container-fluid">
   <div class="row flex-nowrap">
     <!-- Sidebar -->
-    <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
+    <div
+      class="col-auto p-0 bg-light border-end collapse d-md-block"
+      id="sidebarContent"
+    >
       <%- include('./partials/sidebar') %>
     </div>
 
@@ -12,7 +16,9 @@
       <main class="py-4">
         <!-- Encabezado -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-          <h1 class="text-primary"><i class="bi bi-list-ul me-2"></i> Listado de Carreras</h1>
+          <h1 class="text-primary">
+            <i class="bi bi-list-ul me-2"></i> Listado de Carreras
+          </h1>
           <a href="/carreras/create" class="btn btn-success btn-lg">
             <i class="bi bi-plus-circle"></i> Agregar Nueva Carrera
           </a>
@@ -22,32 +28,51 @@
         <div class="row g-4">
           <% if (carreras.length > 0) { %>
             <% carreras.forEach(carrera => { %>
-            <div class="col-md-6 col-lg-4">
-              <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                  <h5 class="card-title text-primary"><%= carrera.nombre %></h5>
-                  <p class="card-text">ID: <%= carrera.id %></p>
-                  <div class="d-flex justify-content-between mt-3">
-                    <a href="/carreras/mostrarestudiantes/<%= carrera.id %>" class="btn btn-info btn-sm">
-                      <i class="bi bi-people-fill"></i> Ver Practicantes
-                    </a>
-                    <a href="/carreras/edit/<%= carrera.id %>" class="btn btn-warning btn-sm">
-                      <i class="bi bi-pencil-square"></i> Editar
-                    </a>
-                    <form action="/carreras/delete/<%= carrera.id %>" method="POST" style="display: inline;">
-                      <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="bi bi-trash"></i> Eliminar
-                      </button>
-                    </form>
+              <div class="col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100">
+                  <img
+                    src="/images/carreras/<%= carrera.imagen %>"
+                    class="card-img-top card-img-custom"
+                    alt="<%= carrera.nombre %>"
+                  />
+                  <div class="card-body text-center">
+                    <h5 class="card-title text-primary"><%= carrera.nombre %></h5>
+                    <div class="d-flex justify-content-between mt-3">
+                      <a
+                        href="/carreras/mostrarestudiantes/<%= carrera.id %>"
+                        class="btn btn-info btn-sm"
+                      >
+                        <i class="bi bi-people-fill"></i> Ver Practicantes
+                      </a>
+
+                      <a
+                        href="/carreras/edit/<%= carrera.id %>"
+                        class="btn btn-warning btn-sm"
+                        onclick="confirmEdit(event, this); return false;"
+                      >
+                        <i class="bi bi-pencil-square"></i> Editar
+                      </a>
+
+                      <form
+                        action="/carreras/delete/<%= carrera.id %>"
+                        method="POST"
+                        style="display: inline"
+                        onsubmit="return confirmDeleteWithPassword(event, this);"
+                      >
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
             <% }); %>
           <% } else { %>
             <div class="col-12">
               <div class="alert alert-warning text-center" role="alert">
-                No hay carreras registradas. <a href="/carreras/create" class="alert-link">Agrega una nueva carrera</a>.
+                No hay carreras registradas.
+                <a href="/carreras/create" class="alert-link">Agrega una nueva carrera</a>.
               </div>
             </div>
           <% } %>
@@ -63,5 +88,153 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Obtén el rol del usuario desde el servidor
+    const userRole = "<%= userRole %>"; 
+    console.log("Rol del usuario en la vista:", userRole); // Depuración
+
+    const error = "<%= error || '' %>";
+    const success = "<%= success || '' %>";
+
+    // Muestra una alerta de error si hay un mensaje de error
+    if (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error,
+        timer: 2000, // 2 segundos
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    }
+
+    // Muestra una alerta de éxito si hay un mensaje de éxito
+    if (success) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Éxito',
+        text: success,
+        timer: 3000, // 3 segundos
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    }
+
+    // Función para confirmar eliminación con contraseña
+    function confirmDeleteWithPassword(event, form) {
+      console.log("Función confirmEdit ejecutada"); // Depuración
+      console.log("Rol del usuario:", userRole); // Depuración
+      event.preventDefault(); // Evita el envío del formulario por defecto
+
+      // Verifica si el usuario es un practicante
+      if (userRole === 'practicante') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Acceso denegado',
+          text: 'No tienes permisos para eliminar este curso.',
+          confirmButtonText: 'Aceptar'
+        });
+        return; // Detén el flujo aquí
+      }
+
+      // Si no es practicante, muestra el flujo normal de confirmación
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Segundo cuadro para ingresar la contraseña
+          Swal.fire({
+            title: 'Confirma tu acción',
+            text: 'Por favor, ingresa tu contraseña para confirmar la eliminación.',
+            icon: 'info',
+            input: 'password', // Solicita una contraseña
+            inputPlaceholder: 'Ingresa tu contraseña',
+            inputAttributes: {
+              autocapitalize: 'off',
+              required: true
+            },
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            preConfirm: (password) => {
+              if (!password) {
+                Swal.showValidationMessage('La contraseña es obligatoria');
+                return false; // No permite continuar hasta que se ingrese una contraseña
+              }
+              return password; // Devuelve la contraseña ingresada
+            }
+          }).then((passwordResult) => {
+            if (passwordResult.isConfirmed) {
+              // Crea un campo oculto para enviar la contraseña con el formulario
+              const passwordInput = document.createElement('input');
+              passwordInput.type = 'hidden';
+              passwordInput.name = 'password';
+              passwordInput.value = passwordResult.value; // La contraseña ingresada
+              form.appendChild(passwordInput);
+
+              form.submit(); // Envía el formulario
+            }
+          });
+        }
+      });
+    }
+
+    // Función para confirmar edición
+    function confirmEdit(event, link) {
+      console.log("Función confirmEdit ejecutada"); // Depuración
+      console.log("Rol del usuario:", userRole); // Depuración
+      event.preventDefault(); // Evita la acción predeterminada del enlace
+
+      // Verifica si el usuario es un practicante
+      if (userRole === 'practicante') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Acceso denegado',
+          text: 'No tienes permisos para editar este curso.',
+          confirmButtonText: 'Aceptar'
+        });
+        return; // Detén el flujo aquí
+      }
+
+      // Si no es practicante, muestra el cuadro de confirmación
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Estás a punto de editar este curso.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, editar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirige al enlace de edición
+          window.location.href = link.href;
+        }
+      });
+    }
+
+    // Asigna la función al evento onsubmit de los formularios de eliminación
+    document.querySelectorAll('form[onsubmit]').forEach((form) => {
+      form.onsubmit = (event) => confirmDeleteWithPassword(event, form);
+    });
+
+    // Asigna la función al evento onclick de los enlaces de edición
+    document.querySelectorAll('a[onclick]').forEach((link) => {
+      link.onclick = (event) => confirmEdit(event, link);
+    });
+  });
+</script>
 
 <%- include('./partials/footer') %>
