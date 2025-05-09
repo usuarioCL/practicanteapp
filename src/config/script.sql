@@ -1,7 +1,9 @@
 INSERT INTO usuarios (nombre, email, password, rol)
 VALUES ('admin', 'admin@example.com', '$10$EAZZ4LYqfdStZe7nK5Se7.JieWbFxdAthVCrwFFHNRcjZ0RGZHAB.', 'admin');
 INSERT INTO usuarios (nombre, email, password, rol)
-VALUES ('ed', 'ed@ed.com', '$2a$10$7Q9h8J9h8J9h8J9h8J9h8J9h8J9h8J9h8J9h8J9h8J9h8J9h8J9h8', 'admin');
+VALUES ('ed', 'ed01@ed.com', '$2b$10$EAZZ4LYqfdStZe7nK5Se7.JieWbFxdAthVCrwFFHNRcjZ0RGZHAB.', 'admin');
+
+-- $10$AsVr7.f7idee1ZoKFRbls.cUBN67v9aKIrCXADcIfmteQ3ajbQi9i
 select * from usuarios;
 select * from usuarios;
 select * from carreras;
