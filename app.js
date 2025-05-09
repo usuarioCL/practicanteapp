@@ -14,6 +14,7 @@ const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const carreraRoutes = require('./src/routes/carreraRoutes');
 const practicanteRoutes = require('./src/routes/practicanteRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
+const asistenciaRoutes = require('./src/routes/asistenciaRoutes');
 
 // Importar modelos
 const Usuario = require('./src/models/usuarioModel');
@@ -81,12 +82,33 @@ app.use((req, res, next) => {
     next();
 });
 
+<<<<<<< HEAD
 // Usar las rutas de la aplicación
 app.use('/', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/carreras', carreraRoutes);
 app.use('/practicantes', practicanteRoutes);
 app.use('/usuarios', usuarioRoutes);
+=======
+// Deserializar el usuario (buscar el usuario por ID)
+passport.deserializeUser(async (id, done) => {
+    try {
+        const usuario = await Usuario.findById(id); // Busca el usuario por ID
+        done(null, usuario);
+    } catch (error) {
+        done(error);
+    }
+});
+
+
+// Usar las rutas de autenticación
+app.use('/', authRoutes); 
+app.use('/dashboard', dashboardRoutes);
+app.use('/carreras', carreraRoutes);
+app.use('/practicantes', practicanteRoutes);
+app.use('/asistencias', asistenciaRoutes);
+app.use('/usuarios', usuarioRoutes);    
+>>>>>>> 1ea313e (Asistencias)
 
 // Iniciar el servidor
 const PORT = 3000;
