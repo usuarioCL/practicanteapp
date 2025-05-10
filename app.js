@@ -82,14 +82,13 @@ app.use((req, res, next) => {
     next();
 });
 
-<<<<<<< HEAD
 // Usar las rutas de la aplicación
 app.use('/', authRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/carreras', carreraRoutes);
 app.use('/practicantes', practicanteRoutes);
 app.use('/usuarios', usuarioRoutes);
-=======
+
 // Deserializar el usuario (buscar el usuario por ID)
 passport.deserializeUser(async (id, done) => {
     try {
@@ -107,8 +106,7 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/carreras', carreraRoutes);
 app.use('/practicantes', practicanteRoutes);
 app.use('/asistencias', asistenciaRoutes);
-app.use('/usuarios', usuarioRoutes);    
->>>>>>> 1ea313e (Asistencias)
+app.use('/usuarios', usuarioRoutes);
 
 // Iniciar el servidor
 const PORT = 3000;

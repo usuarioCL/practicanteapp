@@ -27,5 +27,5 @@ VALUES
 ('Laura Torres', 'laura.torres@example.com', (SELECT id FROM carreras WHERE nombre = 'Administración de Empresas'), '2023-08-01'),
 ('Jorge Ramírez', 'jorge.ramirez@example.com', (SELECT id FROM carreras WHERE nombre = 'Ingeniería de Software'), '2023-09-12'),
 ('Claudia Morales', 'claudia.morales@example.com', (SELECT id FROM carreras WHERE nombre = 'Marketing'), '2023-10-05');
-
-INSERT INTO carreras (nombre, imagen) VALUES ('Nombre de prueba', 'imagen.jpg');
+ALTER TABLE carreras ADD imagen VARCHAR(255);
+INSERT INTO carreras (nombre, imagen) VALUES ('Nombre de prueba', 'prueba.png');
