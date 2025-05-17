@@ -18,6 +18,7 @@ const dashboardRoutes = require('./src/routes/dashboardRoutes');
 const carreraRoutes = require('./src/routes/carreraRoutes');
 const practicanteRoutes = require('./src/routes/practicanteRoutes');
 const usuarioRoutes = require('./src/routes/usuarioRoutes');
+const asistenciaRoutes = require('./src/routes/asistenciaRoutes');
 
 // Inicializar la aplicación
 const app = express();
@@ -86,6 +87,7 @@ app.use('/dashboard', dashboardRoutes);
 app.use('/carreras', carreraRoutes);
 app.use('/practicantes', practicanteRoutes);
 app.use('/usuarios', usuarioRoutes);
+app.use('/asistencias', asistenciaRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res) => {
@@ -98,6 +100,25 @@ app.use((err, req, res, next) => {
     res.status(500).render('500', { title: 'Error del servidor', error: err.message });
 });
 
+
+// Deserializar el usuario (buscar el usuario por ID)
+passport.deserializeUser(async (id, done) => {
+    try {
+        const usuario = await Usuario.findById(id); // Busca el usuario por ID
+        done(null, usuario);
+    } catch (error) {
+        done(error);
+    }
+});
+
+
+// Usar las rutas de autenticación
+app.use('/', authRoutes); 
+app.use('/dashboard', dashboardRoutes);
+app.use('/carreras', carreraRoutes);
+app.use('/practicantes', practicanteRoutes);
+app.use('/asistencias', asistenciaRoutes);
+app.use('/usuarios', usuarioRoutes);
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
