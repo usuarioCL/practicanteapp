@@ -1,111 +1,150 @@
 <%- include('partials/header') %>
 
 <div class="container-fluid">
-  <div class="row flex-nowrap">
+  <div class="row">
     <!-- Sidebar -->
-    <div
-      class="col-auto p-0 bg-light collapse d-md-block border-end"
-      id="sidebarContent"
-    >
+    <div class="col-auto p-0 bg-light collapse d-md-block border-end">
       <%- include('partials/sidebar') %>
     </div>
 
-    <!-- Contenido principal -->
-    <div class="col px-4">
-      <main class="py-4">
-        <!-- Encabezado -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h1 class="text-primary">
-            <i class="bi bi-people-fill me-2"></i> Listado de Practicantes
-          </h1>
-          <a href="/practicantes/create" class="btn btn-success btn-lg">
-            <i class="bi bi-plus-circle"></i> Agregar Nuevo Practicante
-          </a>
-        </div>
+    <!-- Encabezado Compacto -->
+    <%- include('partials/headerCompacto', { 
+      icono: 'fas fa-users', 
+      titulo: 'Listado de Practicantes', 
+      subtitulo: 'Consulta y administra los practicantes registrados', 
+      vista: 'practicantes' // Asegúrate de pasar esta variable
+    }) %>
 
-        <!-- Tarjeta de la tabla -->
-        <div class="card shadow-sm">
-          <div
-            class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
-          >
-            <h5 class="mb-0">
-              <i class="bi bi-table me-2"></i> Practicantes Registrados
-            </h5>
-            <span class="badge bg-light text-primary fs-6"
-              ><%= practicantes.length %> Practicantes</span
-            >
+    <!-- Contenido principal -->
+    <div id="mainContent" class="col px-5" >
+      <main class="py-4">
+        <!-- Barra de Filtros -->
+        <div class="row mb-4 mt-1 align-items-center">
+          <!-- Botones de vista -->
+          <div class="col-auto mt-3 d-flex align-items-center gap-2">
+            <button id="toggleView" class="btn btn-secondary" title="Vista de cuadrícula">
+              <i class="fas fa-th-large"></i>
+            </button>
+            <button id="listView" class="btn btn-secondary" title="Vista de lista">
+              <i class="fas fa-list"></i>
+            </button>
           </div>
-          <div class="card-body">
-            
-            <!-- Tabla de practicantes -->
-            <div class="table-responsive">
-              <table class="table table-hover table-bordered align-middle">
-                <thead class="table-primary text-center">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Carrera</th>
-                    <th scope="col">Fecha de Inicio</th>
-                    <th scope="col" class="text-center">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% if (practicantes.length > 0) { %> <%
-                  practicantes.forEach((practicante, index) => { %>
-                  <tr>
-                    <th scope="row" class="text-center"><%= index + 1 %></th>
-                    <td><%= practicante.nombre %></td>
-                    <td><%= practicante.email %></td>
-                    <td><%= practicante.carrera_nombre %></td>
-                    <td class="text-center">
-                      <%= practicante.fecha_inicio ? new
-                      Date(practicante.fecha_inicio).toISOString().split('T')[0]
-                      : 'No especificada' %>
-                    </td>
-                    <td class="text-center">
-                      <a
-                        href="/practicantes/edit/<%= practicante.id %>"
-                        class="btn btn-warning btn-sm me-2"
-                        title="Editar"
-                      >
-                        <i class="bi bi-pencil-square"></i>
+        
+            <!-- Formulario de filtros -->
+            <form action="/practicantes" method="GET" class="col d-flex align-items-center flex-wrap gap-3 justify-content-end">
+            <!-- Filtro por nombre -->
+            <div class="form-group mb-0">
+              <label for="nombre" class="form-label mb-0 small">Nombre</label>
+              <input type="text" name="nombre" id="nombre" class="form-control form-control-sm" placeholder="Buscar por nombre" value="<%= selectedNombre || '' %>" onchange="this.form.submit()">
+            </div>
+          
+            <!-- Filtro por carrera -->
+            <div class="form-group mb-0">
+              <label for="carrera" class="form-label mb-0 small">Carrera</label>
+              <select name="carrera" id="carrera" class="form-select form-select-sm" onchange="this.form.submit()">
+              <option value="">Seleccione una Carrera</option>
+              <% carreras.forEach(carrera => { %>
+                <option value="<%= carrera.id %>" <%= carrera.id == selectedCarrera ? 'selected' : '' %>><%= carrera.nombre %></option>
+              <% }); %>
+              </select>
+            </div>
+          
+            <!-- Filtro por estado -->
+            <div class="form-group mb-0">
+              <label for="estado" class="form-label mb-0 small">Estado</label>
+              <select name="estado" id="estado" class="form-select form-select-sm" onchange="this.form.submit()">
+              <option value="">Todos</option>
+              <option value="activo" <%= selectedEstado === 'activo' ? 'selected' : '' %>>Activo</option>
+              <option value="inactivo" <%= selectedEstado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+              </select>
+            </div>
+          
+            <!-- Filtro por límite de estudiantes -->
+            <div class="form-group mb-0">
+              <label for="limit" class="form-label mb-0 small">Estudiantes por página</label>
+              <select name="limit" id="limit" class="form-select form-select-sm" onchange="this.form.submit()">
+              <option value="5" <%= limit == 5 ? 'selected' : '' %>>5</option>
+              <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
+              <option value="20" <%= limit == 20 ? 'selected' : '' %>>20</option>
+              <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
+              </select>
+            </div>
+          
+            <!-- Botón para limpiar filtros -->
+            <div class="form-group mb-0">
+              <label class="form-label mb-0 small d-block">&nbsp;</label>
+              <a href="/practicantes" class="btn btn-secondary btn-sm">
+              <i class="fas fa-redo"></i> Limpiar Filtros
+              </a>
+            </div>
+            </form>
+        </div>
+       <!-- Listado de practicantes -->
+        <div class="row g-4 mt-3">
+          <% if (practicantes.length > 0) { %>
+            <% practicantes.forEach((practicante, index) => { %>
+              <div class="col-12">
+                <div class="card shadow-sm border-1">
+                  <div class="row g-0">
+                      <!-- Detalles del practicante -->
+                      <div class="col-md-10">
+                        <div class="card-body">
+                          <h5 class="card-title text-primary"><%= practicante.nombre %></h5>
+                            <div class="text-muted small d-flex gap-3">
+                              <!-- Carrera -->
+                              <small class="text-muted">
+                                <strong>Carrera:</strong> <%= practicante.Carrera ? practicante.Carrera.nombre : 'No especificada' %> 
+                              </small>
+                              <small>
+                                <strong>|</strong>
+                              </small>
+                              <!-- Fecha de Inicio -->
+                              <small class="text-muted">
+                                <strong>Fecha de Inicio:</strong> <%= practicante.fecha_inicio ? new Date(practicante.fecha_inicio).toLocaleDateString() : 'No especificada' %> 
+                              </small>
+                              <small>
+                                <strong>|</strong>
+                              </small>
+                              <!-- Estado -->
+                              <small class="text-muted">
+                                <strong>Estado:</strong>
+                                <span class="badge <%= practicante.activo ? 'bg-success' : 'bg-danger' %>">
+                                  <%= practicante.activo ? 'Activo' : 'Inactivo' %>
+                                </span>
+                              </small>
+                            </div>
+                        </div>
+                      </div>
+                    <!-- Acciones -->
+                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                      <div class="d-flex flex-row gap-2">
+                      <!-- Botón para editar -->
+                      <a href="/practicantes/edit/<%= practicante.id %>" class="btn btn-warning btn-sm" title="Editar">
+                        <i class="fas fa-edit"></i> Editar
                       </a>
+                      <!-- Botón para eliminar -->
                       <form
-                        action="/practicantes/<%= practicante.id %>?_method=DELETE"
+                        action="/practicantes/delete/<%= practicante.id %>?_method=DELETE&page=<%= currentPage %>&nombre=<%= selectedNombre || '' %>&carrera=<%= selectedCarrera || '' %>&estado=<%= selectedEstado || '' %>"
                         method="POST"
-                        style="display: inline"
+                        onsubmit="return confirm('¿Estás seguro de que deseas eliminar este practicante?')"
                       >
-                        <button
-                          type="submit"
-                          class="btn btn-danger btn-sm"
-                          title="Eliminar"
-                          onclick="return confirm('¿Estás seguro de que deseas eliminar este practicante?')"
-                        >
-                          <i class="bi bi-trash"></i>
+                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
+                        <i class="fas fa-trash-alt"></i> Eliminar
                         </button>
                       </form>
-                    </td>
-                  </tr>
-                  <% }); %> <% } else { %>
-                  <tr>
-                    <td colspan="6" class="text-center text-muted">
-                      No hay practicantes registrados.
-                    </td>
-                  </tr>
-                  <% } %>
-                </tbody>
-              </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="col-12">
+              <div class="alert alert-warning text-center" role="alert">
+                No hay practicantes registrados.
+              </div>
             </div>
-
-          </div>
-        </div>
-
-        <!-- Botón para volver al Dashboard -->
-        <div class="text-center mt-5">
-          <a href="/dashboard" class="btn btn-secondary btn-lg">
-            <i class="bi bi-arrow-left-circle"></i> Volver al Dashboard
-          </a>
+          <% } %>
         </div>
       </main>
     </div>

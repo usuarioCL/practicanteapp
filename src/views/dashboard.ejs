@@ -1,97 +1,74 @@
 <%- include('partials/header') %>
 
-<div class="container-fluid min-vh-100">
-  <div class="row flex-nowrap">
+<div class="container-fluid">
+  <div class="row">
     <!-- Sidebar -->
-    <div
-      class="col-auto p-0 bg-light border-end collapse d-md-block"
-      id="sidebarContent"
-    >
-      <%- include('./partials/sidebar') %>
+    <div class="col-auto p-0 bg-light collapse d-md-block border-end">
+      <%- include('partials/sidebar') %>
     </div>
-
+    <!-- Encabezado Compacto -->
+    <%- include('partials/headerCompacto', { 
+      icono: 'fas fa-chart-pie', 
+      titulo: 'Vista General', 
+      subtitulo: 'Resumen general y accesos rápidos',
+      vista: 'dashboard'
+    }) %>
     <!-- Contenido principal -->
-    <div class="col px-4">
+    <div id="mainContent" class="col px-5">
       <main class="py-4">
-        <!-- Encabezado -->
-        <div class="mb-4">
-          <h1 class="text-primary">Bienvenido al Dashboard</h1>
-          <p class="text-muted">
-            Hola, <strong><%= usuario.nombre %></strong>! Aquí puedes gestionar
-            todas las funcionalidades del sistema.
-          </p>
+        <h3 class="mb-2">Accesos Rápidos</h3>
+        <div class="row g-4">
+          <% funcionalidades.forEach(funcionalidad => { %>
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center">
+                  <i class="<%= funcionalidad.icono %> text-<%= funcionalidad.color %> display-4 mb-3"></i>
+                  <h5 class="card-title"><%= funcionalidad.titulo %></h5>
+                  <p class="card-text text-muted"><%= funcionalidad.descripcion %></p>
+                  <a href="<%= funcionalidad.enlace %>" class="btn btn-<%= funcionalidad.color %>">Ir</a>
+                </div>
+              </div>
+            </div>
+          <% }); %>
         </div>
-
-        <!-- Tarjetas -->
+        <h3 class="mb-2 mt-3">Estadísticas Generales</h3>
         <div class="row g-4">
           <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 h-100">
               <div class="card-body text-center">
                 <i class="bi bi-people-fill text-primary display-4 mb-3"></i>
-                <h5 class="card-title">Practicantes</h5>
-                <p class="card-text">Gestiona los practicantes registrados.</p>
-                <a href="/practicantes" class="btn btn-primary">Ir</a>
+                <h5 class="card-title">Total de Practicantes</h5>
+                <p class="display-4 text-primary"><%= totalPracticantes %></p>
               </div>
             </div>
           </div>
-
           <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 h-100">
               <div class="card-body text-center">
-                <i
-                  class="bi bi-calendar-check-fill text-success display-4 mb-3"
-                ></i>
-                <h5 class="card-title">Asistencias</h5>
-                <p class="card-text">
-                  Gestiona las asistencias de los practicantes.
-                </p>
-                <a href="/asistencias" class="btn btn-success">Ir</a>
+                <i class="bi bi-check-circle-fill text-success display-4 mb-3"></i>
+                <h5 class="card-title">Practicantes Activos</h5>
+                <p class="display-4 text-success"><%= practicantesActivos %></p>
               </div>
             </div>
           </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
+          <div class="col-md-6  col-lg-4">
+            <div class="card shadow-sm border-0 h-100">
               <div class="card-body text-center">
-                <i class="bi bi-folder-fill text-warning display-4 mb-3"></i>
-                <h5 class="card-title">Evidencias</h5>
-                <p class="card-text">
-                  Gestiona las evidencias de los practicantes.
-                </p>
-                <a href="/evidencias" class="btn btn-warning">Ir</a>
+                <i class="bi bi-x-circle-fill text-danger display-4 mb-3"></i>
+                <h5 class="card-title">Practicantes Inactivos</h5>
+                <p class="display-4 text-danger"><%= practicantesInactivos %></p>
               </div>
             </div>
           </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
-              <div class="card-body text-center">
-                <i class="bi bi-bar-chart-fill text-info display-4 mb-3"></i>
-                <h5 class="card-title">Reportes</h5>
-                <p class="card-text">Genera reportes detallados.</p>
-                <a href="/reportes" class="btn btn-info">Ir</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
-              <div class="card-body text-center">
-                <i class="bi bi-gear-fill text-secondary display-4 mb-3"></i>
-                <h5 class="card-title">Configuración</h5>
-                <p class="card-text">Ajusta las configuraciones del sistema.</p>
-                <a href="/configuracion" class="btn btn-secondary">Ir</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm border-0">
-              <div class="card-body text-center">
-                <i class="bi bi-person-fill text-danger display-4 mb-3"></i>
-                <h5 class="card-title">Usuarios</h5>
-                <p class="card-text">Gestiona los usuarios del sistema.</p>
-                <a href="/usuarios" class="btn btn-danger">Ir</a>
+        </div>
+        <!-- Gráficos -->
+        <div class="row g-4 mt-2">
+          <div class="col-12">
+            <div class="card-header">
+              <h5 class="card-title text-center">Distribución de Practicantes por Carrera</h5>
+            <div class="card-body">
+            <div class="card shadow-sm border-0  min-vh-50" style="height: 300px;">
+                <canvas id="practicantesPorCarrera"></canvas>
               </div>
             </div>
           </div>

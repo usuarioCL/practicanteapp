@@ -1,65 +1,115 @@
-const db = require('../config/bd');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
 
-const Practicante = {
-    // Función para obtener todos los practicantes
-    async findAll() {
-        const [result] = await db.query(`
-            SELECT 
-                practicantes.id, 
-                practicantes.nombre, 
-                practicantes.email, 
-                practicantes.fecha_inicio, 
-                carreras.nombre AS carrera_nombre
-            FROM practicantes
-            JOIN carreras ON practicantes.carrera_id = carreras.id
-        `);
-        return result;
+const Practicante = sequelize.define('Practicante', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-
-    // Función para obtener todos los practicantes de una carrera específica
-    async findByCarrera(carreraId) {
-        const [result] = await db.query(`
-            SELECT 
-                practicantes.id, 
-                practicantes.nombre, 
-                practicantes.email, 
-                practicantes.fecha_inicio, 
-                carreras.nombre AS carrera_nombre
-            FROM practicantes
-            JOIN carreras ON practicantes.carrera_id = carreras.id
-            WHERE carreras.id = ?
-        `, [carreraId]);
-        return result; 
+    nombre: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
     },
-
-    // Función para obtener un practicante por su ID
-    async findById(id) {
-        const [result] = await db.query('SELECT * FROM practicantes WHERE id = ?', [id]);
-        return result[0]; 
+    tipo_documento_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'tipos_documento', // Nombre de la tabla en la base de datos
+            key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
     },
-
-    // Función para crear un nuevo practicante
-    async create(data) {
-        const { nombre, email, carreraId, fecha_inicio } = data;
-        await db.query(
-            'INSERT INTO practicantes (nombre, email, carrera_id, fecha_inicio) VALUES (?, ?, ?, ?)',
-            [nombre, email, carreraId, fecha_inicio]
-        );
+    numero_documento: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        unique: true,
     },
-
-    // Función para actualizar un practicante
-    async update(id, nombre, email, carrera_id, fecha_inicio) {
-        await db.query(
-            'UPDATE practicantes SET nombre = ?, email = ?, carrera_id = ?, fecha_inicio = ? WHERE id = ?',
-            [nombre, email, carrera_id, fecha_inicio, id]
-        );
+    email: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true,
     },
-
-    // Función para eliminar un practicante
-    async delete(id) {
-        const [result] = await db.query('DELETE FROM practicantes WHERE id = ?', [id]);
-        return result.affectedRows > 0;
+    telefono: {
+        type: DataTypes.STRING(20),
+        allowNull: true,
+        defaultValue: null,
     },
-};
+    centro_estudio: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null,
+    },
+    direccion: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null,
+    },
+    genero: {
+        type: DataTypes.ENUM('masculino', 'femenino', 'otro'),
+        allowNull: true,
+        defaultValue: null,
+    },
+    fecha_nacimiento: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+        defaultValue: null,
+    },
+    carrera_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: 'carreras', // Nombre de la tabla en la base de datos
+            key: 'id',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+    },
+    fecha_inicio: {
+        type: DataTypes.DATEONLY,
+        allowNull: false,
+    },
+    fecha_fin: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+        defaultValue: null,
+    },
+    foto_perfil: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null,
+    },
+    observaciones: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        defaultValue: null,
+    },
+    activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+    },
+    creado_en: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    actualizado_en: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+}, {
+    tableName: 'practicantes', // Nombre de la tabla en la base de datos
+    timestamps: false, // No usar createdAt y updatedAt automáticamente
+    validate: {
+        fechaFinMayorQueFechaInicio() {
+            if (this.fecha_fin && this.fecha_fin <= this.fecha_inicio) {
+                throw new Error('La fecha_fin debe ser mayor que la fecha_inicio.');
+            }
+        },
+    },
+});
 
 module.exports = Practicante;

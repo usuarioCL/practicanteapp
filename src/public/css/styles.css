@@ -1,6 +1,100 @@
+/* Sidebar fijo en pantallas grandes */
+#sidebarMenu {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  z-index: 1000;
+  border-right: 1px solid #ddd;
+}
+.header-consistent-height {
+  height: 100px; /* Ajusta este valor según la altura deseada */
+  display: flex;
+  align-items: center; /* Centra verticalmente el contenido */
+}
+body {
+  overflow-x: hidden;
+}
+/* Ajusta el contenido principal */
+#mainContent {
+  margin-left: 250px; /* Ancho del sidebar */
+  transition: margin-left 0.1s ease; /* Transición suave */
+  overflow-x: auto;
+}
 
-.card-img-custom {
-    width: auto;
-    height: 200px;
-    object-fit: cover; /* Ajusta la imagen para que encaje sin deformarse */
+/* Ajusta el contenido principal */
+#encabezado {
+  padding-left: 260px; /* Espacio para el sidebar */
+  padding-right: 20px; /* Espacio adicional a la derecha */
+  transition: padding-left 0.1s ease, padding-right 0.1s ease; /* Transición suave */
+  overflow-x: visible; 
+}
+.dropdown-menu {
+  z-index: 1050; /* Asegura que el menú esté por encima de otros elementos */
+  position: absolute; /* Asegura que el menú se superponga correctamente */
+}
+/* Configuración para pantallas de 900px o menos */
+@media (max-width: 768px) {
+  /* Botón hamburguesa */
+  button[data-bs-toggle="collapse"] {
+    display: block; /* Asegúrate de que el botón sea visible */
+    position: relative; /* Mantén el botón en el flujo normal del documento */
+    top: 0; /* Alinea el botón al borde superior */
+    left: 0; /* Alinea el botón al borde izquierdo */
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    z-index: 1100; /* Asegúrate de que esté por encima del contenido */
+    font-size: 1.2rem; /* Tamaño del texto */
+    padding: 10px; /* Espaciado interno */
+    text-align: center; /* Centrar el contenido */
+    background-color: #007bff; /* Fondo azul (puedes personalizarlo) */
+    color: white; /* Color del texto */
+    border: none; /* Elimina el borde */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    margin-bottom: 0; /* Elimina el espaciado inferior */
   }
+
+  /* Sidebar horizontal */
+  #sidebarMenu {
+    position: relative; /* Posición relativa para que no se sobreponga */
+    top: 0; /* Alinea el sidebar justo debajo del botón */
+    left: 0;
+    width: 100%; /* Ocupa todo el ancho de la pantalla */
+    height: auto; /* Ajusta la altura automáticamente */
+    z-index: 1050; /* Asegúrate de que esté por encima del contenido */
+    background-color: #f8f9fa; /* Fondo del sidebar */
+    border-bottom: 1px solid #ddd; /* Línea divisoria */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
+    display: none; /* Oculta el sidebar por defecto */
+  }
+
+  #sidebarMenu.show {
+    display: block; /* Muestra el sidebar cuando se activa */
+  }
+
+  #sidebarContent {
+    flex-direction: row; /* Cambia el diseño a horizontal */
+    overflow-x: auto; /* Permite scroll horizontal si el contenido es muy grande */
+  }
+
+  #sidebarContent ul {
+    flex-direction: row; /* Cambia el menú a horizontal */
+  }
+
+  #sidebarContent ul li {
+    margin-right: 10px; /* Espaciado entre los elementos del menú */
+  }
+
+  #mainContent {
+    margin-left: 0; /* Elimina el margen izquierdo */
+  }
+
+   #encabezado {
+    margin-left: 0; /* Elimina el margen izquierdo */
+    padding-left: 20px; /* Espacio adicional a la izquierda */
+    padding-right: 20px; /* Espacio adicional a la derecha */
+  }
+}
+

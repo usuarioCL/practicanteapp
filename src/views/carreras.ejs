@@ -1,68 +1,134 @@
 <%- include('./partials/header') %>
 
-<!-- Contenedor principal -->
 <div class="container-fluid">
-  <div class="row flex-nowrap">
+  <div class="row">
     <!-- Sidebar -->
-    <div
-      class="col-auto p-0 bg-light border-end collapse d-md-block"
-      id="sidebarContent"
-    >
+    <div class="col-auto p-0 bg-light border-end collapse d-md-block">
       <%- include('./partials/sidebar') %>
     </div>
 
+    <!-- Encabezado Compacto -->
+    <%- include('partials/headerCompacto', { 
+      icono: 'fas fa-book', 
+      titulo: 'Carreras', 
+      subtitulo: 'Consulta y administra las carreras registradas',
+      vista: 'carreras'	
+    }) %>
     <!-- Contenido principal -->
-    <div class="col px-4">
+    <div id="mainContent" class="col px-5">
       <main class="py-4">
-        <!-- Encabezado -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h1 class="text-primary">
-            <i class="bi bi-list-ul me-2"></i> Listado de Carreras
-          </h1>
-          <a href="/carreras/create" class="btn btn-success btn-lg">
-            <i class="bi bi-plus-circle"></i> Agregar Nueva Carrera
+         <!-- Filtros -->
+    <div class="row mb-4 mt-1 align-items-center">
+      <!-- Botones de vista -->
+      <div class="col-auto mt-4 d-flex align-items-center gap-1">
+        <button id="toggleView" class="btn btn-secondary" title="Vista de cuadrícula">
+          <i class="fas fa-th-large"></i>
+        </button>
+        <button id="listView" class="btn btn-secondary" title="Vista de lista">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    
+      <!-- Formulario de filtros -->
+      <form action="/carreras" method="GET" class="col d-flex align-items-center flex-wrap gap-3">
+        <!-- Filtro por nombre -->
+        <div class="flex-grow-1">
+          <label for="nombre" class="form-label mb-0">Nombre</label>
+          <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Buscar por nombre" value="<%= selectedNombre || '' %>">
+        </div>
+    
+        <!-- Filtro por estado -->
+        <div class="flex-grow-1">
+          <label for="estado" class="form-label mb-0">Estado</label>
+          <select name="estado" id="estado" class="form-select">
+            <option value="">Todos</option>
+            <option value="activo" <%= selectedEstado === 'activo' ? 'selected' : '' %>>Activo</option>
+            <option value="inactivo" <%= selectedEstado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+          </select>
+        </div>
+    
+        <!-- Botones de acción -->
+        <div class="col-auto d-flex align-items-center mt-4 gap-2">
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-filter"></i> Aplicar Filtros
+          </button>
+          <a href="/carreras" class="btn btn-secondary">
+            <i class="fas fa-redo"></i> Limpiar Filtros
           </a>
         </div>
-
-        <!-- Listado de carreras en tarjetas -->
+    
+        <!-- Botón para agregar carrera -->
+        <div class="col-auto mt-4 ms-auto">
+          <a href="/carreras/create" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Agregar Carrera
+          </a>
+        </div>
+      </form>
+    </div>
+        <!-- Listado de carreras -->
         <div class="row g-4">
           <% if (carreras.length > 0) { %>
-            <% carreras.forEach(carrera => { %>
-              <div class="col-md-6 col-lg-3">
-                <div class="card shadow-sm h-100">
-                  <img
-                    src="/images/carreras/<%= carrera.imagen %>"
-                    class="card-img-top card-img-custom"
-                    alt="<%= carrera.nombre %>"
-                  />
-                  <div class="card-body text-center">
-                    <h5 class="card-title text-primary"><%= carrera.nombre %></h5>
-                    <div class="d-flex justify-content-between mt-3">
+            <% carreras.forEach((carrera, index) => { %>
+              <div class="col-12">
+                <div class="card shadow-sm border-1">
+                  <div class="row g-0">
+                    <!-- Detalles de la carrera -->
+                    <div class="col-md-10">
+                      <div class="card-body">
+                        <h5 class="card-title text-primary"><%= carrera.nombre %></h5>
+                        <div class="text-muted small d-flex gap-3">
+                          <small class="text-muted">
+                            Creado: <%= new Date(carrera.creado_en).toLocaleDateString() %> 
+                          </small>
+                           <small>
+                            <strong>|</strong>
+                          </small>
+                          <small class="text-muted">
+                            Actualizado: <%= new Date(carrera.actualizado_en).toLocaleDateString() %>
+                          </small>
+                          <small>
+                            <strong>|</strong>
+                          </small>
+                          <small class="text-muted">
+                            Estado: 
+                            <span class="badge <%= carrera.activo ? 'bg-success' : 'bg-danger' %>">
+                              <%= carrera.activo ? 'Activo' : 'Inactivo' %>
+                            </span>
+                          </small>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Acciones -->
+                    <div class="col-md-2 d-flex align-items-center justify-content-center">
+                      <div class="d-flex gap-2">
                       <a
                         href="/carreras/mostrarestudiantes/<%= carrera.id %>"
                         class="btn btn-info btn-sm"
+                        title="Ver Practicantes"
                       >
-                        <i class="bi bi-people-fill"></i> Ver Practicantes
+                        <i class="fas fa-users"></i>
                       </a>
-
                       <a
                         href="/carreras/edit/<%= carrera.id %>"
                         class="btn btn-warning btn-sm"
-                        onclick="confirmEdit(event, this); return false;"
+                        title="Editar"
                       >
-                        <i class="bi bi-pencil-square"></i> Editar
+                        <i class="fas fa-edit"></i>
                       </a>
-
                       <form
                         action="/carreras/delete/<%= carrera.id %>"
                         method="POST"
-                        style="display: inline"
                         onsubmit="return confirmDeleteWithPassword(event, this);"
                       >
-                        <button type="submit" class="btn btn-danger btn-sm">
-                          <i class="bi bi-trash"></i> Eliminar
+                        <button
+                        type="submit"
+                        class="btn btn-danger btn-sm"
+                        title="Eliminar"
+                        >
+                        <i class="fas fa-trash-alt"></i>
                         </button>
                       </form>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -77,164 +143,9 @@
             </div>
           <% } %>
         </div>
-
-        <!-- Botón para volver al Dashboard -->
-        <div class="text-center mt-5">
-          <a href="/dashboard" class="btn btn-secondary btn-lg">
-            <i class="bi bi-arrow-left-circle"></i> Volver al Dashboard
-          </a>
-        </div>
       </main>
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Obtén el rol del usuario desde el servidor
-    const userRole = "<%= userRole %>"; 
-    console.log("Rol del usuario en la vista:", userRole); // Depuración
-
-    const error = "<%= error || '' %>";
-    const success = "<%= success || '' %>";
-
-    // Muestra una alerta de error si hay un mensaje de error
-    if (error) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error,
-        timer: 2000, // 2 segundos
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
-    }
-
-    // Muestra una alerta de éxito si hay un mensaje de éxito
-    if (success) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Éxito',
-        text: success,
-        timer: 3000, // 3 segundos
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
-    }
-
-    // Función para confirmar eliminación con contraseña
-    function confirmDeleteWithPassword(event, form) {
-      console.log("Función confirmEdit ejecutada"); // Depuración
-      console.log("Rol del usuario:", userRole); // Depuración
-      event.preventDefault(); // Evita el envío del formulario por defecto
-
-      // Verifica si el usuario es un practicante
-      if (userRole === 'practicante') {
-        Swal.fire({
-          icon: 'error',
-          title: 'Acceso denegado',
-          text: 'No tienes permisos para eliminar este curso.',
-          confirmButtonText: 'Aceptar'
-        });
-        return; // Detén el flujo aquí
-      }
-
-      // Si no es practicante, muestra el flujo normal de confirmación
-      Swal.fire({
-        title: '¿Estás seguro?',
-        text: 'Esta acción no se puede deshacer.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Segundo cuadro para ingresar la contraseña
-          Swal.fire({
-            title: 'Confirma tu acción',
-            text: 'Por favor, ingresa tu contraseña para confirmar la eliminación.',
-            icon: 'info',
-            input: 'password', // Solicita una contraseña
-            inputPlaceholder: 'Ingresa tu contraseña',
-            inputAttributes: {
-              autocapitalize: 'off',
-              required: true
-            },
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Confirmar',
-            cancelButtonText: 'Cancelar',
-            preConfirm: (password) => {
-              if (!password) {
-                Swal.showValidationMessage('La contraseña es obligatoria');
-                return false; // No permite continuar hasta que se ingrese una contraseña
-              }
-              return password; // Devuelve la contraseña ingresada
-            }
-          }).then((passwordResult) => {
-            if (passwordResult.isConfirmed) {
-              // Crea un campo oculto para enviar la contraseña con el formulario
-              const passwordInput = document.createElement('input');
-              passwordInput.type = 'hidden';
-              passwordInput.name = 'password';
-              passwordInput.value = passwordResult.value; // La contraseña ingresada
-              form.appendChild(passwordInput);
-
-              form.submit(); // Envía el formulario
-            }
-          });
-        }
-      });
-    }
-
-    // Función para confirmar edición
-    function confirmEdit(event, link) {
-      console.log("Función confirmEdit ejecutada"); // Depuración
-      console.log("Rol del usuario:", userRole); // Depuración
-      event.preventDefault(); // Evita la acción predeterminada del enlace
-
-      // Verifica si el usuario es un practicante
-      if (userRole === 'practicante') {
-        Swal.fire({
-          icon: 'error',
-          title: 'Acceso denegado',
-          text: 'No tienes permisos para editar este curso.',
-          confirmButtonText: 'Aceptar'
-        });
-        return; // Detén el flujo aquí
-      }
-
-      // Si no es practicante, muestra el cuadro de confirmación
-      Swal.fire({
-        title: '¿Estás seguro?',
-        text: 'Estás a punto de editar este curso.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, editar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Redirige al enlace de edición
-          window.location.href = link.href;
-        }
-      });
-    }
-
-    // Asigna la función al evento onsubmit de los formularios de eliminación
-    document.querySelectorAll('form[onsubmit]').forEach((form) => {
-      form.onsubmit = (event) => confirmDeleteWithPassword(event, form);
-    });
-
-    // Asigna la función al evento onclick de los enlaces de edición
-    document.querySelectorAll('a[onclick]').forEach((link) => {
-      link.onclick = (event) => confirmEdit(event, link);
-    });
-  });
-</script>
 
 <%- include('./partials/footer') %>

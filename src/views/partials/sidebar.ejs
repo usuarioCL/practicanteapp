@@ -1,80 +1,72 @@
 <!-- Sidebar -->
-<nav id="sidebarMenu" class="d-flex flex-column flex-shrink-0 p-4 bg-light border-end shadow-sm vh-100" aria-label="Menú de navegación principal">
-  <!-- Botón para colapsar el sidebar en pantallas pequeñas -->
-  <div class="d-md-none text-center mb-3">
-    <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarContent" aria-expanded="false" aria-controls="sidebarContent" aria-label="Abrir o cerrar el menú">
-      <i class="bi bi-list"></i> Menú
-    </button>
-  </div>
-
+<nav id="sidebarMenu" class="collapse d-md-block bg-light border-end shadow-sm" aria-label="Menú de navegación principal">
   <!-- Contenido del sidebar -->
-  <div id="sidebarContent" class="collapse d-md-block flex-grow-1" aria-label="Contenido del menú">
+  <div id="sidebarContent" class="d-flex flex-column flex-md-column h-100">
     <!-- Encabezado del sidebar -->
-    <div class="text-center mb-4">
-      <h2 class="text-primary fw-bold fs-4">Panel de Control</h2>
-      <hr class="border-primary">
+    <div class="text-center mb-3 shadow-sm header-consistent-height justify-content-center">
+      <h2 class="fw-bold  ">Panel de Control</h2>
     </div>
 
     <!-- Menú de navegación -->
-    <ul class="nav nav-pills flex-column mb-auto fs-5" aria-label="Opciones del menú">
-      <li class="nav-item">
+    <ul class="nav nav-pills flex-column flex-md-column flex-sm-row mb-auto fs-6" aria-label="Opciones del menú">
+      <li class="nav-item mb-1">
         <a href="/dashboard" class="nav-link <%= activePage === 'dashboard' ? 'active' : 'text-dark' %>" aria-current="page" aria-label="Ir al inicio">
-          <i class="bi bi-house-door-fill me-3"></i> Inicio
+          <i class="fas fa-home fa-lg me-2"></i> Inicio
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="/practicantes" class="nav-link <%= activePage === 'practicantes' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de practicantes">
-          <i class="bi bi-people-fill me-3"></i> Practicantes
+          <i class="fas fa-users fa-lg me-2"></i> Practicantes
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="/carreras" class="nav-link <%= activePage === 'carreras' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de carreras">
-          <i class="bi bi-book-fill me-3"></i> Carreras
+          <i class="fas fa-book fa-lg me-2"></i> Carreras
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="#" class="nav-link <%= activePage === 'asistencias' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de asistencias">
-          <i class="bi bi-calendar-check-fill me-3"></i> Asistencias
+          <i class="fas fa-calendar-check fa-lg me-2"></i> Asistencias
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="#" class="nav-link <%= activePage === 'evidencias' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de evidencias">
-          <i class="bi bi-folder-fill me-3"></i> Evidencias
+          <i class="fas fa-folder fa-lg me-2"></i> Evidencias
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="#" class="nav-link <%= activePage === 'reportes' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de reportes">
-          <i class="bi bi-bar-chart-fill me-3"></i> Reportes
+          <i class="fas fa-chart-bar fa-lg me-2"></i> Reportes
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="/usuarios" class="nav-link <%= activePage === 'usuarios' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de usuarios">
-          <i class="bi bi-person-fill me-3"></i> Usuarios
+            <i class="fas fa-user-cog fa-lg me-2"></i> Usuarios
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="#" class="nav-link <%= activePage === 'notificaciones' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de notificaciones">
-          <i class="bi bi-bell-fill me-3"></i> Notificaciones
+          <i class="fas fa-bell fa-lg me-2"></i> Notificaciones
           <span class="badge bg-danger ms-auto" aria-label="3 notificaciones nuevas">3</span>
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="#" class="nav-link <%= activePage === 'configuracion' ? 'active' : 'text-dark' %>" aria-label="Ir a la sección de configuración">
-          <i class="bi bi-gear-fill me-3"></i> Configuración
+          <i class="fas fa-cogs fa-lg me-2"></i> Configuración
         </a>
       </li>
-      <li>
+      <li class="mb-1">
         <a href="/logout" class="nav-link text-danger" aria-label="Cerrar sesión">
-          <i class="bi bi-box-arrow-right me-3"></i> Cerrar Sesión
+          <i class="fas fa-sign-out-alt fa-lg me-2"></i> Cerrar Sesión
         </a>
       </li>
     </ul>
-  </div>
 
-  <!-- Footer del sidebar -->
-  <div class="mt-auto text-center">
-    <hr class="border-secondary">
-    <p class="text-muted small mb-0">© 2025 PracticantesApp</p>
-    <p class="text-muted small">Todos los derechos reservados</p>
+    <!-- Footer del sidebar -->
+    <div class="mt-auto text-center d-none d-md-block">
+      <hr class="border-secondary">
+      <p class="text-muted small mb-0">© 2025 PracticantesApp</p>
+      <p class="text-muted small">Todos los derechos reservados</p>
+    </div>
   </div>
 </nav>

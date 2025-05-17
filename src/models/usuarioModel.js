@@ -1,33 +1,77 @@
-const bcrypt = require('bcryptjs');
-const db = require('../config/bd'); 
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
 
-const Usuario = {
-
-    // Función para encontrar un usuario por su nombre de usuario
-    async findByEmail(email) {
-        const [rows] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email]);
-        return rows[0]; 
+const Usuario = sequelize.define('Usuario', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-
-    // Función para encontrar un usuario por su ID
-    async findById(id) {
-        const [result] = await db.query('SELECT * FROM usuarios WHERE id = ?', [id]);
-        return result[0];
+    nombre: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
     },
-
-    // Función para crear un nuevo usuario
-    async create(nombre, email, password, rol) {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await db.query(
-            'INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)',
-            [nombre, email, hashedPassword, rol]
-        );
+    correo: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        unique: true,
     },
-
-    async findAll() {
-        const [rows] = await db.query('SELECT * FROM usuarios');
-        return rows; 
+    contrasena: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
     },
-};
+    rol: {
+        type: DataTypes.ENUM('admin', 'practicante'),
+        allowNull: false,
+    },
+    activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+    },
+    creado_en: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    actualizado_en: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+    },
+    token_recuperacion: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null,
+    },
+    expiracion_token: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
+    },
+    intentos_recuperacion: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+    },
+    imagen_perfil: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        defaultValue: null,
+    },
+    practicante_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+            model: 'practicantes', // Nombre de la tabla relacionada
+            key: 'id',
+        },
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+    },
+}, {
+    tableName: 'usuarios',
+    timestamps: false, // No usar createdAt y updatedAt automáticamente
+});
 
 module.exports = Usuario;

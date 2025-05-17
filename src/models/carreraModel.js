@@ -1,36 +1,43 @@
-const db = require('../config/bd');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/sequelize');
 
-const Carrera = {
-    // Método para obtener todas las carreras
-    async findAll() {
-        const [result] = await db.query('SELECT id, nombre, imagen FROM carreras'); 
-        return result; 
+const Carrera = sequelize.define('Carrera', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
     },
-    
-    // Método para obtener una carrera por ID
-    findById: async (id) => {
-        const [rows] = await db.query('SELECT * FROM carreras WHERE id = ?', [id]);
-        return rows[0];
+    nombre: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
     },
-
-    // Método para crear una nueva carrera
-    create: async (nombre, imagen) => {
-        await db.query('INSERT INTO carreras (nombre, imagen) VALUES (?, ?)', [nombre, imagen]);
+    imagen: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
     },
-
-    // Método para actualizar una carrera existente
-    update: async (id, nombre, imagen = null) => {
-        if (imagen) {
-            await db.query('UPDATE carreras SET nombre = ?, imagen = ? WHERE id = ?', [nombre, imagen, id]);
-        } else {
-            await db.query('UPDATE carreras SET nombre = ? WHERE id = ?', [nombre, id]);
-        }
+    descripcion: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+        defaultValue: null, // Asegura que coincida con DEFAULT NULL en la base de datos
     },
-
-    // Método para eliminar una carrera
-    delete: async (id) => {
-        await db.query('DELETE FROM carreras WHERE id = ?', [id]);
-    }
-};
+    activo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+    },
+    creado_en: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Sequelize maneja CURRENT_TIMESTAMP como NOW
+    },
+    actualizado_en: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW, // Sequelize maneja CURRENT_TIMESTAMP como NOW
+    },
+}, {
+    tableName: 'carreras', // Nombre de la tabla en la base de datos
+    timestamps: false, // No usar createdAt y updatedAt automáticamente
+});
 
 module.exports = Carrera;

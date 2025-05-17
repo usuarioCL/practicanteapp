@@ -1,24 +1,22 @@
-const passport = require('passport'); // Importa Passport
-const Usuario = require('../models/usuarioModel'); // Asegúrate de que la ruta sea correcta
+const passport = require('passport');
+const { Usuario } = require('../models');
 
-// Serialización del usuario
-passport.serializeUser((usuario, done) => {
-    if (!usuario || !usuario.id) {
-        console.error("Error: El usuario no tiene un campo 'id'");
-        return done(new Error("El usuario no tiene un campo 'id'"));
-    }
-    done(null, usuario.id);
+passport.serializeUser((user, done) => {
+    done(null, user.id); // Serializa el ID del usuario
 });
 
-// Deserialización del usuario
 passport.deserializeUser(async (id, done) => {
     try {
-        const usuario = await Usuario.findById(id); // Busca el usuario por ID
-        done(null, usuario);
+        // Cambia findById por findByPk
+        const usuario = await Usuario.findByPk(id);
+        if (usuario) {
+            done(null, usuario); // Deserializa el usuario
+        } else {
+            done(null, false); // Si no se encuentra el usuario
+        }
     } catch (error) {
-        console.error("Error al deserializar el usuario:", error);
-        done(error, null);
+        done(error, null); // Manejo de errores
     }
 });
 
-module.exports = passport; // Exporta Passport configurado
+module.exports = passport;

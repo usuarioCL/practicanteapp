@@ -1,22 +1,50 @@
-const Usuario = require('../models/usuarioModel');
+const { Usuario } = require('../models');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 
 const authController = {
-    // Controlador para registrar un nuevo usuario
+    // Procesar el inicio de sesión
+    async login(req, res, next) {
+        passport.authenticate('local', (err, user, info) => {
+            if (err) {
+                console.error('Error del servidor:', err);
+                return next(err);
+            }
+            if (!user) {
+                req.flash('error', info.message);
+                return res.redirect('/login');
+            }
+            req.logIn(user, (err) => {
+                if (err) {
+                    console.error('Error al iniciar sesión:', err);
+                    return next(err);
+                }
+                res.redirect('/dashboard');
+            });
+        })(req, res, next);
+    },
+
+    // Procesar el registro de usuarios
     async register(req, res) {
-        const { nombre, email, password, rol } = req.body;
+        const { nombre, correo, contrasena, rol } = req.body;
 
         try {
-            // Verifica si el usuario ya existe
-            const existingUser = await Usuario.findByUsername(nombre);
+            const existingUser = await Usuario.findOne({ where: { correo } });
             if (existingUser) {
-                req.flash('error', 'El usuario ya existe');
+                req.flash('error', 'El correo ya está registrado.');
                 return res.redirect('/register');
             }
 
-            // Crea un nuevo usuario
-            await Usuario.create(nombre, email, password, rol || 'practicante');
-            req.flash('success', 'Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
+            const hashedPassword = await bcrypt.hash(contrasena, 10);
+
+            await Usuario.create({
+                nombre,
+                correo,
+                contrasena: hashedPassword,
+                rol: rol || 'practicante',
+            });
+
+            req.flash('success', 'Usuario registrado exitosamente.');
             res.redirect('/login');
         } catch (error) {
             console.error('Error al registrar usuario:', error);
@@ -25,7 +53,7 @@ const authController = {
         }
     },
 
-    // Controlador para cerrar sesión
+    // Cerrar sesión
     logout(req, res) {
         req.logout((err) => {
             if (err) {
@@ -36,7 +64,7 @@ const authController = {
             req.flash('success', 'Sesión cerrada exitosamente.');
             res.redirect('/');
         });
-    }
+    },
 };
 
 module.exports = authController;

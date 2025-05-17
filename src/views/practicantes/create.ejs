@@ -6,84 +6,159 @@
     <div class="col-auto p-0 bg-light border-end">
       <%- include('../partials/sidebar') %>
     </div>
-
     <!-- Contenido principal -->
-    <div class="col px-4">
-      <main class="py-4">
-        <!-- Encabezado -->
-        <div class="mb-4">
-          <h1 class="text-primary"><i class="bi bi-person-plus me-2"></i> Agregar Nuevo Practicante</h1>
-          <p class="text-muted">Completa el formulario para registrar un nuevo practicante en el sistema.</p>
-        </div>
+    <div id="mainContent" class="col px-3">
+      <main class="py-3">
+        <!-- Formulario para crear practicante -->
+        <div class="card shadow-sm p-3" style="width: 70%; margin: auto;">
+            <form action="/practicantes" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+              <div class="row">
+                <div class="col-md-12 text-center mb-4">
+                  <h1 class="text-primary fs-4 fw-bold">Registrar Practicante</h1>
+                  <p class="text-muted fs-6">Complete el formulario a continuación para registrar un nuevo practicante.</p>
+                  <hr class="my-3">
+                </div>
+                <!-- Sección: Información Personal -->
+                <div class="col-md-6">
+                  <h2 class="text-secondary fs-5 mb-2">Información Personal</h2>
+                  <div class="role mb-2">
+                    <label for="nombre" class="form-label small">Nombre:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      <input type="text" id="nombre" name="nombre" class="form-control form-control-sm" placeholder="Nombre completo" required>
+                    </div>
+                    <div class="invalid-feedback">Por favor, ingresa el nombre.</div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="email" class="form-label small">Email:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                      <input type="email" id="email" name="email" class="form-control form-control-sm" placeholder="usuario@correo.com" required>
+                    </div>
+                    <div class="invalid-feedback">Por favor, ingresa un email válido.</div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="telefono" class="form-label small">Teléfono:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                      <input type="text" id="telefono" name="telefono" class="form-control form-control-sm" placeholder="+51 987654321">
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="direccion" class="form-label small">Dirección:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                      <input type="text" id="direccion" name="direccion" class="form-control form-control-sm" placeholder="Dirección">
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="genero" class="form-label small">Género:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                      <select id="genero" name="genero" class="form-select form-select-sm">
+                        <option value="">Selecciona un género</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="otro">Otro</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="fecha_nacimiento" class="form-label small">Fecha de nacimiento:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                      <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="form-control form-control-sm">
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="tipo_documento_id" class="form-label small">Tipo de Documento:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                      <select id="tipo_documento_id" name="tipo_documento_id" class="form-select form-select-sm">
+                        <% if (typeof tiposDocumento !== 'undefined' && tiposDocumento.length > 0) { %>
+                          <% tiposDocumento.forEach(tipo => { %>
+                            <option value="<%= tipo.id %>"><%= tipo.tipo %></option>
+                          <% }) %>
+                        <% } else { %>
+                          <option value="">No hay tipos de documento disponibles</option>
+                        <% } %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="numero_documento" class="form-label small">Número de Documento:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-id-card-alt"></i></span>
+                      <input type="text" id="numero_documento" name="numero_documento" class="form-control form-control-sm" placeholder="Número de documento" required>
+                    </div>
+                    <div class="invalid-feedback">Por favor, ingresa el número de documento.</div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="foto_perfil" class="form-label small">Foto de Perfil:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-image"></i></span>
+                      <input type="file" id="foto_perfil" name="foto_perfil" class="form-control form-control-sm">
+                    </div>
+                  </div>
+                </div>
 
-        <!-- Formulario para agregar un nuevo practicante -->
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <form action="/practicantes/create" method="POST" class="needs-validation" novalidate>
-              <!-- Nombre -->
-              <div class="form-group mb-3">
-                <label for="nombre" class="form-label">Nombre del practicante:</label>
-                <input
-                  type="text"
-                  id="nombre"
-                  name="nombre"
-                  class="form-control"
-                  placeholder="Ingresa el nombre del practicante"
-                  required
-                />
-                <div class="invalid-feedback">Por favor, ingresa el nombre del practicante.</div>
+                <!-- Sección: Información Académica -->
+                <div class="col-md-6">
+                  <div class="row mb-2">
+                    <h2 class="text-secondary fs-5  mb-2">Información Académica</h2>
+                    <label for="centro_estudio" class="form-label small">Centro de Estudio:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-school"></i></span>
+                      <input type="text" id="centro_estudio" name="centro_estudio" class="form-control form-control-sm" placeholder="Centro de estudio">
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="carrera_id" class="form-label small">Carrera:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                      <select id="carrera_id" name="carrera_id" class="form-select form-select-sm">
+                        <% carreras.forEach(carrera => { %>
+                          <option value="<%= carrera.id %>"><%= carrera.nombre %></option>
+                        <% }) %>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Sección: Fechas y Estado -->
+                  <h2 class="text-secondary fs-5 mt-4 mb-2">Fechas</h2>
+                  <div class="row mb-2">
+                    <label for="fecha_inicio" class="form-label small">Fecha de Inicio:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
+                      <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" required>
+                    </div>
+                  </div>
+                  <div class="row mb-2">
+                    <label for="fecha_fin" class="form-label small">Fecha de Fin:</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                      <input type="date" id="fecha_fin" name="fecha_fin" class="form-control form-control-sm">
+                    </div>
+                  </div>
+
+                  <div class="row mt-3">
+                    <h2 class="text-secondary fs-5  mb-2">Observaciones</h2>
+                    <div class="col-md-12 mb-2">    
+                        <label for="observaciones" class="form-label small">Observaciones:</label>
+                        <textarea id="observaciones" name="observaciones" class="form-control form-control-sm" rows="4" placeholder="Escribe tus observaciones aquí..."></textarea>
+                    </div>
+                  </div>
               </div>
-
-              <!-- Email -->
-              <div class="form-group mb-3">
-                <label for="email" class="form-label">Email del practicante:</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  class="form-control"
-                  placeholder="Ingresa el email del practicante"
-                  required
-                />
-                <div class="invalid-feedback">Por favor, ingresa un email válido.</div>
-              </div>
-
-              <!-- Carrera -->
-              <div class="form-group mb-3">
-                <label for="carreraId" class="form-label">Carrera:</label>
-                <select id="carreraId" name="carreraId" class="form-select" required>
-                  <option value="">Selecciona una carrera</option>
-                  <% carreras.forEach(carrera => { %>
-                  <option value="<%= carrera.id %>"><%= carrera.nombre %></option>
-                  <% }) %>
-                </select>
-                <div class="invalid-feedback">Por favor, selecciona una carrera.</div>
-              </div>
-
-              <!-- Fecha de inicio -->
-              <div class="form-group mb-3">
-                <label for="fecha_inicio" class="form-label">Fecha de inicio:</label>
-                <input
-                  type="date"
-                  id="fecha_inicio"
-                  name="fecha_inicio"
-                  class="form-control"
-                  required
-                />
-                <div class="invalid-feedback">Por favor, selecciona una fecha de inicio.</div>
-              </div>
-
               <!-- Botones -->
-              <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-success btn-lg">
-                  <i class="bi bi-check-circle"></i> Guardar
-                </button>
-                <a href="/practicantes" class="btn btn-secondary btn-lg">
-                  <i class="bi bi-arrow-left-circle"></i> Cancelar
-                </a>
-              </div>
-            </form>
-          </div>
+              <div class="d-flex justify-content-center gap-5 mt-3">
+                  
+                  <button type="submit" class="btn btn-primary btn-sm px-4 py-2 shadow-sm">
+                  <i class="fas fa-save"></i> Guardar
+                  </button>
+                  <a href="/practicantes" class="btn btn-outline-secondary btn-sm px-4 py-2 shadow-sm">
+                  <i class="fas fa-arrow-left"></i> Cancelar
+                  </a>
+                </div>
+          </form>
         </div>
       </main>
     </div>
@@ -91,20 +166,3 @@
 </div>
 
 <%- include('../partials/footer') %>
-
-<script>
-  // Validación de formulario con Bootstrap
-  (function () {
-    'use strict';
-    const forms = document.querySelectorAll('.needs-validation');
-    Array.from(forms).forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-        form.classList.add('was-validated');
-      }, false);
-    });
-  })();
-</script>

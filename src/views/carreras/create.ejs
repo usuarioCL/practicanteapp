@@ -4,52 +4,75 @@
 <div class="container-fluid">
   <div class="row flex-nowrap">
     <!-- Sidebar -->
-    <div class="col-auto p-0 bg-light border-end collapse d-md-block"id="sidebarContent">
+    <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
       <%- include('../partials/sidebar') %>
     </div>
 
     <!-- Contenido principal -->
     <div class="col px-4">
-        <main class="py-4">
+      <main class="py-4">
         <div
-            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2">Agregar Nueva Carrera</h1>
+          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Agregar Nueva Carrera</h1>
         </div>
+
+        <!-- Mostrar mensajes de error o éxito -->
+        <% if (errorMessage) { %>
+          <div class="alert alert-danger"><%= errorMessage %></div>
+        <% } %>
+        <% if (successMessage) { %>
+          <div class="alert alert-success"><%= successMessage %></div>
+        <% } %>
 
         <!-- Formulario para agregar una nueva carrera -->
         <form action="/carreras" method="POST" enctype="multipart/form-data">
-            <div class="form-group mb-3">
-              <label for="nombre" class="form-label">Nombre de la carrera:</label>
-              <input
-                type="text"
-                id="nombre"
-                name="nombre" 
-                class="form-control"
-                placeholder="Ingresa el nombre de la carrera"
-                required
-              />
-            </div>
-            <div class="form-group mb-3">
-              <label for="imagen" class="form-label">Imagen de la carrera:</label>
-              <input
-                type="file"
-                id="imagen"
-                name="imagen"
-                class="form-control"
-                accept="image/*"
-                required
-              />
-            </div>
-            <div class="d-flex justify-content-between">
-              <button type="submit" class="btn btn-success">Guardar</button>             
-              <a href="/carreras" class="btn btn-secondary">Volver al listado</a>
-            </div>
-           
-          </form>
+          <!-- Nombre -->
+          <div class="form-group mb-3">
+            <label for="nombre" class="form-label">Nombre de la carrera:</label>
+            <input
+              type="text"
+              id="nombre"
+              name="nombre"
+              class="form-control"
+              placeholder="Ingresa el nombre de la carrera"
+              value="<%= typeof oldData !== 'undefined' ? oldData.nombre : '' %>"
+              required
+            />
+          </div>
 
-        </main>
+          <!-- Imagen -->
+          <div class="form-group mb-3">
+            <label for="imagen" class="form-label">Imagen de la carrera:</label>
+            <input
+              type="file"
+              id="imagen"
+              name="imagen"
+              class="form-control"
+              accept="image/*"
+              required
+            />
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group mb-3">
+            <label for="descripcion" class="form-label">Descripción:</label>
+            <textarea
+              id="descripcion"
+              name="descripcion"
+              class="form-control"
+              placeholder="Ingresa una descripción opcional"
+              rows="4"
+            ><%= typeof oldData !== 'undefined' ? oldData.descripcion : '' %></textarea>
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a href="/carreras" class="btn btn-secondary">Volver al listado</a>
+          </div>
+        </form>
+      </main>
     </div>
-
   </div>
 </div>
 

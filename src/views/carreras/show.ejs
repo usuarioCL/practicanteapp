@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <!-- Sidebar -->
+        <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
+            <%- include('../partials/sidebar') %>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="col px-4">
+            <main class="py-4">
+                <!-- Header del practicante -->
+                <div class="d-flex align-items-center justify-content-between mb-4 mt-5 p-4 shadow-lg bg-white rounded" style="width: 80%; margin: 0 auto;">
+                    <!-- Imagen del practicante -->
+                    <div class="me-4">
+                        <img src="/images/carreras/<%= practicante.foto_perfil || 'default-avatar.png' %>" alt="Avatar" class="rounded-circle shadow" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid white;">
+                    </div>
+                    <!-- Detalles del practicante -->
+                    <div style="flex: 1;">
+                        <h2 class="mb-2 text-dark" style="font-weight: bold; font-size: 2.5rem;"><%= practicante.nombre %></h2>
+                        <p class="text-muted mb-3" style="font-size: 1rem;">Estudiante de <%= practicante.carrera_nombre || 'Carrera no especificada' %></p>
+                        <div class="d-flex justify-content-start flex-wrap gap-3" style="font-size: 1rem;">
+                            <div>
+                                <i class="fas fa-envelope me-2 text-primary"></i>
+                                <strong>Correo:</strong> <%= practicante.email %>
+                            </div>
+                            <div>
+                                <i class="fas fa-phone me-2 text-primary"></i>
+                                <strong>Teléfono:</strong> <%= practicante.telefono || 'No especificado' %>
+                            </div>
+                            <div>
+                                <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                                <strong>Fecha de inicio:</strong> <%= practicante.fecha_inicio ? practicante.fecha_inicio.toISOString().split('T')[0] : 'No especificada' %>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Botones de acción -->
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="#informes" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-file-alt me-1"></i> Ver Informes
+                        </a>
+                        <a href="#imagenes" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-image me-1"></i> Ver Imágenes
+                        </a>
+                        <a href="/carreras/mostrarestudiantes/<%= carrera.id %>" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Regresar a Estudiantes
+                        </a>
+                    </div>
+                </div>
+
+                
+
+                
+            </main>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

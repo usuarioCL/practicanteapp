@@ -1,0 +1,11 @@
+<!-- filepath: c:\Users\User\Documents\proyecto\practicantesapp\src\views\500.ejs -->
+<%- include('./partials/header') %>
+
+<div class="container text-center mt-5">
+    <h1 class="display-1 text-danger">500</h1>
+    <p class="lead">Ocurrió un error en el servidor.</p>
+    <p><strong>Detalles del error:</strong> <%= error %></p>
+    <a href="/dashboard" class="btn btn-primary">Volver al inicio</a>
+</div>
+
+<%- include('./partials/footer') %>
