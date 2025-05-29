@@ -88,13 +88,7 @@ Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local:
 5.  **Ejecutar la Aplicación:**
 
     ```powershell
-    npm start
-    ```
-
-    O si usas `nodemon` para desarrollo:
-
-    ```powershell
-    npm run dev
+    nodemon app
     ```
 
     (Asegúrate de tener el script `dev` definido en tu `package.json`, ej: `"dev": "nodemon app.js"`)
