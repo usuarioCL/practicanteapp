@@ -44,9 +44,9 @@
                 <div class="card shadow-sm">
                   <div class="card-body text-center">
                     <h5 class="card-title text-primary"><%= practicante.nombre %></h5>
-                    <p class="card-text">Email: <%= practicante.email %></p>
+                    <p class="card-text">Email: <%= practicante.email %></p>                    
                     <p class="card-text">
-                      Fecha de inicio: <%= practicante.fecha_inicio ? practicante.fecha_inicio.toISOString().split('T')[0] : 'No especificada' %>
+                      Fecha de inicio: <%= practicante.fecha_inicio && !isNaN(new Date(practicante.fecha_inicio).getTime()) ? new Date(practicante.fecha_inicio).toISOString().split('T')[0] : 'No especificada' %>
                     </p>
                     <!-- Botón para saber más -->
                     <a href="/carreras/show/<%= practicante.id %>?carreraId=<%= carreraId %>" class="btn btn-info btn-sm">

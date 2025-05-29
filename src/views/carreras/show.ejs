@@ -28,10 +28,10 @@
                             <div>
                                 <i class="fas fa-phone me-2 text-primary"></i>
                                 <strong>Teléfono:</strong> <%= practicante.telefono || 'No especificado' %>
-                            </div>
+                            </div>                            
                             <div>
                                 <i class="fas fa-calendar-alt me-2 text-primary"></i>
-                                <strong>Fecha de inicio:</strong> <%= practicante.fecha_inicio ? practicante.fecha_inicio.toISOString().split('T')[0] : 'No especificada' %>
+                                <strong>Fecha de inicio:</strong> <%= practicante.fecha_inicio && !isNaN(new Date(practicante.fecha_inicio).getTime()) ? new Date(practicante.fecha_inicio).toISOString().split('T')[0] : 'No especificada' %>
                             </div>
                         </div>
                     </div>

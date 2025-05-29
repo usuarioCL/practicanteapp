@@ -63,9 +63,7 @@ const practicanteController = {
             console.error('Error al obtener el practicante:', error);
             res.status(500).send('Error al obtener el practicante: ' + error.message);
         }
-    },
-
-    // Crear un nuevo practicante
+    },    // Crear un nuevo practicante
     async create(req, res) {
         try {
             const {
@@ -82,26 +80,30 @@ const practicanteController = {
                 numero_documento,
                 observaciones,
                 activo
-            } = req.body;
-             // Manejar el campo fecha_fin
-             const fecha_fin = req.body.fecha_fin && req.body.fecha_fin !== 'Invalid date' ? req.body.fecha_fin : null;
+            } = req.body;             // Manejar los campos de fecha
+             const fecha_fin = req.body.fecha_fin && req.body.fecha_fin !== 'Invalid date' && req.body.fecha_fin.trim() !== '' ? req.body.fecha_fin : null;
+             
+             // Verificar y formatear fecha_nacimiento
+             let fecha_nacimiento_valida = null;
+             if (fecha_nacimiento && fecha_nacimiento.trim() !== '' && fecha_nacimiento !== 'Invalid date') {
+                 const fechaObj = new Date(fecha_nacimiento);
+                 if (!isNaN(fechaObj.getTime())) {
+                     fecha_nacimiento_valida = fecha_nacimiento;
+                 }
+             }
 
             // Validación básica
             if (!nombre || !email || !carrera_id || !fecha_inicio || !tipo_documento_id || !numero_documento ) {
                 return res.status(400).send('Todos los campos obligatorios deben ser completados.');
-            }
-
-            // Manejar el archivo subido
-            const foto_perfil = req.file ? req.file.filename : null;
-
-            await Practicante.create({
+            }            // Manejar el archivo subido
+            const foto_perfil = req.file ? req.file.filename : null;            await Practicante.create({
                 nombre,
                 email,
                 telefono,
                 centro_estudio,
                 direccion,
                 genero,
-                fecha_nacimiento,
+                fecha_nacimiento: fecha_nacimiento_valida,
                 carrera_id,
                 fecha_inicio,
                 fecha_fin,
@@ -109,17 +111,32 @@ const practicanteController = {
                 numero_documento,
                 observaciones,
                 foto_perfil,
-                activo: activo === 'on' ? true : false, 
+                activo: true, // Por defecto, siempre activo
             });
 
             res.redirect('/practicantes');
         } catch (error) {
             console.error('Error al crear el practicante:', error);
-            res.status(500).send('Error al crear el practicante.');
+            
+            // Manejar específicamente el error de número de documento duplicado
+            if (error.name === 'SequelizeUniqueConstraintError' && error.errors.some(err => err.path === 'numero_documento')) {
+                // Cargar los datos necesarios para renderizar el formulario con el error
+                const carreras = await Carrera.findAll();
+                const tiposDocumento = await TipoDocumento.findAll();
+                
+                // Renderizar de nuevo el formulario con el mensaje de error
+                return res.render('practicantes/create', { 
+                    carreras, 
+                    tiposDocumento, 
+                    activePage: 'practicantes',
+                    error: 'El número de documento ya está registrado. Por favor, use otro número.',
+                    formData: req.body  // Pasar los datos del formulario para mantener lo que el usuario ya ingresó
+                });
+            }
+            
+            res.status(500).send('Error al crear el practicante: ' + error.message);
         }
-    },
-
-    // Actualizar un practicante
+    },    // Actualizar un practicante
     async update(req, res) {
         try {
             const {
@@ -136,24 +153,31 @@ const practicanteController = {
                 numero_documento,
                 observaciones,
                 activo
-            } = req.body;
-            // Manejar el campo fecha_fin
-             const fecha_fin = req.body.fecha_fin && req.body.fecha_fin !== 'Invalid date' ? req.body.fecha_fin : null;
+            } = req.body;            // Manejar los campos de fecha
+             const fecha_fin = req.body.fecha_fin && req.body.fecha_fin !== 'Invalid date' && req.body.fecha_fin.trim() !== '' ? req.body.fecha_fin : null;
+             
+             // Verificar y formatear fecha_nacimiento
+             let fecha_nacimiento_valida = null;
+             if (fecha_nacimiento && fecha_nacimiento.trim() !== '' && fecha_nacimiento !== 'Invalid date') {
+                 const fechaObj = new Date(fecha_nacimiento);
+                 if (!isNaN(fechaObj.getTime())) {
+                     fecha_nacimiento_valida = fecha_nacimiento;
+                 }
+             }
 
             const practicante = await Practicante.findByPk(req.params.id);
             if (!practicante) {
                 return res.status(404).send('Practicante no encontrado');
             }
             // Manejar el archivo subido
-            const foto_perfil = req.file ? req.file.filename : null;
-            await practicante.update({
+            const foto_perfil = req.file ? req.file.filename : practicante.foto_perfil;            await practicante.update({
                 nombre,
                 email,
                 telefono,
                 centro_estudio,
                 direccion,
                 genero,
-                fecha_nacimiento,
+                fecha_nacimiento: fecha_nacimiento_valida,
                 carrera_id,
                 fecha_inicio,
                 fecha_fin,
@@ -166,6 +190,25 @@ const practicanteController = {
             res.redirect('/practicantes');
         } catch (error) {
             console.error('Error al actualizar el practicante:', error);
+            
+            // Manejar específicamente el error de número de documento duplicado
+            if (error.name === 'SequelizeUniqueConstraintError' && error.errors.some(err => err.path === 'numero_documento')) {
+                // Cargar los datos necesarios para renderizar el formulario con el error
+                const carreras = await Carrera.findAll();
+                const tiposDocumento = await TipoDocumento.findAll();
+                const practicante = await Practicante.findByPk(req.params.id);
+                
+                // Renderizar de nuevo el formulario con el mensaje de error
+                return res.render('practicantes/edit', { 
+                    practicante,
+                    carreras, 
+                    tiposDocumento, 
+                    activePage: 'practicantes',
+                    error: 'El número de documento ya está registrado. Por favor, use otro número.',
+                    formData: req.body  // Pasar los datos del formulario para mantener lo que el usuario ya ingresó
+                });
+            }
+            
             res.status(500).send('Error al actualizar el practicante: ' + error.message);
         }
     },
@@ -187,17 +230,12 @@ const practicanteController = {
         console.error('Error al eliminar el practicante:', error);
         res.status(500).send('Error al eliminar el practicante.');
         }
-    },
-
-    // Renderizar el formulario de creación
+    },    // Renderizar el formulario de creación
     async renderCreateForm(req, res) {
         try {
-            console.log('Renderizando formulario de creación...');
             const carreras = await Carrera.findAll(); // Obtener las carreras para el formulario
             const tiposDocumento = await TipoDocumento.findAll(); // Obtener los tipos de documento
-    
-            console.log('Tipos de Documento:', tiposDocumento); // Verificar los datos obtenidos
-    
+     
             res.render('practicantes/create', { carreras, tiposDocumento, activePage: 'practicantes' });
         } catch (error) {
             console.error('Error al cargar el formulario de creación:', error);

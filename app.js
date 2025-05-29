@@ -2,9 +2,7 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('./src/middlewares/passport');
-const LocalStrategy = require('passport-local').Strategy;
 const flash = require('connect-flash');
-const bcrypt = require('bcryptjs');
 const methodOverride = require('method-override');
 const path = require('path');
 
@@ -54,25 +52,6 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Configuración de la estrategia local de Passport
-passport.use(new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password'
-}, async (email, password, done) => {
-    try {
-        const user = await Usuario.findOne({ where: { correo: email } }); // Usar Sequelize para buscar al usuario
-        if (!user) return done(null, false, { message: 'El correo no está registrado.' });
-        if (!user.contrasena) return done(null, false, { message: 'El usuario no tiene una contraseña configurada.' });
-
-        const isMatch = await bcrypt.compare(password, user.contrasena);
-        if (!isMatch) return done(null, false, { message: 'La contraseña es incorrecta.' });
-
-        return done(null, user);
-    } catch (error) {
-        return done(error);
-    }
-}));
-
 // Middleware para pasar mensajes flash y datos del usuario a las vistas
 app.use((req, res, next) => {
     res.locals.errorMessage = req.flash('error');
@@ -99,18 +78,6 @@ app.use((err, req, res, next) => {
     console.error('Error del servidor:', err);
     res.status(500).render('500', { title: 'Error del servidor', error: err.message });
 });
-
-
-// Deserializar el usuario (buscar el usuario por ID)
-passport.deserializeUser(async (id, done) => {
-    try {
-        const usuario = await Usuario.findById(id); // Busca el usuario por ID
-        done(null, usuario);
-    } catch (error) {
-        done(error);
-    }
-});
-
 
 // Usar las rutas de autenticación
 app.use('/', authRoutes); 

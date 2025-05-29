@@ -30,7 +30,7 @@ body {
   padding-left: 260px; /* Espacio para el sidebar */
   padding-right: 20px; /* Espacio adicional a la derecha */
   transition: padding-left 0.1s ease, padding-right 0.1s ease; /* Transición suave */
-  overflow-x: visible; 
+  overflow-x: visible;
 }
 .dropdown-menu {
   z-index: 1050; /* Asegura que el menú esté por encima de otros elementos */
@@ -90,11 +90,143 @@ body {
   #mainContent {
     margin-left: 0; /* Elimina el margen izquierdo */
   }
-
-   #encabezado {
+  #encabezado {
     margin-left: 0; /* Elimina el margen izquierdo */
     padding-left: 20px; /* Espacio adicional a la izquierda */
     padding-right: 20px; /* Espacio adicional a la derecha */
   }
 }
 
+/* Estilos para los botones de vista */
+#gridView.active,
+#listView.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Estilos para la vista de cuadrícula */
+#grid-view,
+#list-view {
+  transition: opacity 0.3s ease;
+}
+
+#grid-view {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Garantizar que las tarjetas de la cuadrícula sean uniformes */
+#grid-view .card {
+  transition: all 0.3s ease;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: none;
+}
+
+#grid-view .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para la cabecera de foto en las tarjetas */
+#grid-view .card-header-img {
+  background: linear-gradient(135deg, #114ccb 0%, #2575fc 100%);
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Mejora de la visualización de las imágenes de perfil */
+#grid-view .profile-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid white;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+#grid-view .card:hover .profile-image {
+  transform: scale(1.05);
+}
+
+/* Mejoras para el cuerpo de la tarjeta */
+#grid-view .card-body {
+  padding: 1.5rem 1.25rem;
+}
+
+/* Estilos para la paginación */
+.pagination {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+.page-item:first-child .page-link {
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.page-item:last-child .page-link {
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+
+.page-link {
+  color: #007bff;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+}
+
+.page-link:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+#grid-view .card-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+#grid-view .badge {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+}
+
+/* Información de practicante en cuadrícula */
+#grid-view .practicante-info {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+#grid-view .practicante-info i {
+  width: 18px;
+  margin-right: 8px;
+  color: #6c757d;
+}
+
+/* Botones de acción en cuadrícula */
+#grid-view .action-buttons {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}

@@ -12,127 +12,221 @@
       icono: 'fas fa-users', 
       titulo: 'Listado de Practicantes', 
       subtitulo: 'Consulta y administra los practicantes registrados', 
-      vista: 'practicantes' // Asegúrate de pasar esta variable
+      vista: 'practicantes' 
     }) %>
 
     <!-- Contenido principal -->
-    <div id="mainContent" class="col px-5" >
+    <div id="mainContent" class="col px-4" >
       <main class="py-4">
-        <!-- Barra de Filtros -->
-        <div class="row mb-4 mt-1 align-items-center">
-          <!-- Botones de vista -->
-          <div class="col-auto mt-3 d-flex align-items-center gap-2">
-            <button id="toggleView" class="btn btn-secondary" title="Vista de cuadrícula">
-              <i class="fas fa-th-large"></i>
-            </button>
-            <button id="listView" class="btn btn-secondary" title="Vista de lista">
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
-        
-            <!-- Formulario de filtros -->
-            <form action="/practicantes" method="GET" class="col d-flex align-items-center flex-wrap gap-3 justify-content-end">
-            <!-- Filtro por nombre -->
-            <div class="form-group mb-0">
-              <label for="nombre" class="form-label mb-0 small">Nombre</label>
-              <input type="text" name="nombre" id="nombre" class="form-control form-control-sm" placeholder="Buscar por nombre" value="<%= selectedNombre || '' %>" onchange="this.form.submit()">
+        <!-- Barra de Filtros y Acciones -->
+        <div class="row mb-4 mt-1 align-items-center">          
+          <!-- Botones de vista con estilo mejorado -->
+          <div class="col-auto mt-3 d-flex align-items-center">
+            <div class="btn-group" role="group" aria-label="Cambiar vista">
+              <button id="gridView" class="btn btn-outline-primary active" title="Vista de cuadrícula">
+                <i class="fas fa-th-large me-1"></i><span class="d-none d-md-inline">Cuadrícula</span>
+              </button>
+              <button id="listView" class="btn btn-outline-primary" title="Vista de lista">
+                <i class="fas fa-list me-1"></i><span class="d-none d-md-inline">Lista</span>
+              </button>
             </div>
-          
-            <!-- Filtro por carrera -->
-            <div class="form-group mb-0">
-              <label for="carrera" class="form-label mb-0 small">Carrera</label>
-              <select name="carrera" id="carrera" class="form-select form-select-sm" onchange="this.form.submit()">
-              <option value="">Seleccione una Carrera</option>
-              <% carreras.forEach(carrera => { %>
-                <option value="<%= carrera.id %>" <%= carrera.id == selectedCarrera ? 'selected' : '' %>><%= carrera.nombre %></option>
-              <% }); %>
-              </select>
-            </div>
-          
-            <!-- Filtro por estado -->
-            <div class="form-group mb-0">
-              <label for="estado" class="form-label mb-0 small">Estado</label>
-              <select name="estado" id="estado" class="form-select form-select-sm" onchange="this.form.submit()">
-              <option value="">Todos</option>
-              <option value="activo" <%= selectedEstado === 'activo' ? 'selected' : '' %>>Activo</option>
-              <option value="inactivo" <%= selectedEstado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
-              </select>
-            </div>
-          
-            <!-- Filtro por límite de estudiantes -->
-            <div class="form-group mb-0">
-              <label for="limit" class="form-label mb-0 small">Estudiantes por página</label>
-              <select name="limit" id="limit" class="form-select form-select-sm" onchange="this.form.submit()">
-              <option value="5" <%= limit == 5 ? 'selected' : '' %>>5</option>
-              <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
-              <option value="20" <%= limit == 20 ? 'selected' : '' %>>20</option>
-              <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
-              </select>
-            </div>
-          
-            <!-- Botón para limpiar filtros -->
-            <div class="form-group mb-0">
-              <label class="form-label mb-0 small d-block">&nbsp;</label>
-              <a href="/practicantes" class="btn btn-secondary btn-sm">
-              <i class="fas fa-redo"></i> Limpiar Filtros
-              </a>
-            </div>
+          </div>            
+          <!-- Formulario de filtros con diseño mejorado -->
+            <form action="/practicantes" method="GET" class="col d-flex align-items-center flex-wrap gap-3 justify-content-end bg-white p-3 ">
+              <!-- Filtro por nombre con icono -->
+              <div class="form-group mb-0 position-relative">
+                <label for="nombre" class="form-label mb-0 small fw-bold text-secondary">Nombre</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0"><i class="fas fa-search text-muted"></i></span>
+                  <input type="text" name="nombre" id="nombre" class="form-control border-start-0" 
+                         placeholder="Buscar practicante" value="<%= selectedNombre || '' %>" 
+                         onchange="this.form.submit()">
+                </div>
+              </div>
+            
+              <!-- Filtro por carrera con icono -->
+              <div class="form-group mb-0">
+                <label for="carrera" class="form-label mb-0 small fw-bold text-secondary">Carrera</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0"><i class="fas fa-graduation-cap text-muted"></i></span>
+                  <select name="carrera" id="carrera" class="form-select border-start-0" onchange="this.form.submit()">
+                    <option value="">Todas las carreras</option>
+                    <% carreras.forEach(carrera => { %>
+                      <option value="<%= carrera.id %>" <%= carrera.id == selectedCarrera ? 'selected' : '' %>><%= carrera.nombre %></option>
+                    <% }); %>
+                  </select>
+                </div>
+              </div>
+            
+              <!-- Filtro por estado con icono -->
+              <div class="form-group mb-0">
+                <label for="estado" class="form-label mb-0 small fw-bold text-secondary">Estado</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0"><i class="fas fa-user-check text-muted"></i></span>
+                  <select name="estado" id="estado" class="form-select border-start-0" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="activo" <%= selectedEstado === 'activo' ? 'selected' : '' %>>Activo</option>
+                    <option value="inactivo" <%= selectedEstado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+                  </select>
+                </div>
+              </div>
+            
+              <!-- Filtro por límite de estudiantes con icono -->
+              <div class="form-group mb-0">
+                <label for="limit" class="form-label mb-0 small fw-bold text-secondary">Por página</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white border-end-0"><i class="fas fa-list-ol text-muted"></i></span>
+                  <select name="limit" id="limit" class="form-select border-start-0" onchange="this.form.submit()">
+                    <option value="6" <%= limit == 6 ? 'selected' : '' %>>6</option>
+                    <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
+                    <option value="20" <%= limit == 20 ? 'selected' : '' %>>20</option>
+                    <option value="50" <%= limit == 50 ? 'selected' : '' %>>50</option>
+                  </select>
+                </div>
+              </div>
+            
+              <!-- Botón para limpiar filtros mejorado -->
+              <div class="form-group mb-0">
+                <label class="form-label mb-0 small d-block">&nbsp;</label>
+                <a href="/practicantes" class="btn btn-light btn-sm border-secondary shadow-sm">
+                  <i class="fas fa-sync-alt"></i> Limpiar Filtros
+                </a>
+              </div>
             </form>
-        </div>
-       <!-- Listado de practicantes -->
-        <div class="row g-4 mt-3">
+        </div>          
+        <!-- Listado de practicantes - Vista Lista (oculta por defecto) con estilo mejorado -->
+        <div id="list-view" class="row g-4 mt-4" style="display: none;">
           <% if (practicantes.length > 0) { %>
             <% practicantes.forEach((practicante, index) => { %>
-              <div class="col-12">
-                <div class="card shadow-sm border-1">
+              <div class="col-12 mb-3">
+                <div class="card border-0 shadow-sm hover-card">
                   <div class="row g-0">
-                      <!-- Detalles del practicante -->
-                      <div class="col-md-10">
-                        <div class="card-body">
-                          <h5 class="card-title text-primary"><%= practicante.nombre %></h5>
-                            <div class="text-muted small d-flex gap-3">
-                              <!-- Carrera -->
-                              <small class="text-muted">
-                                <strong>Carrera:</strong> <%= practicante.Carrera ? practicante.Carrera.nombre : 'No especificada' %> 
-                              </small>
-                              <small>
-                                <strong>|</strong>
-                              </small>
-                              <!-- Fecha de Inicio -->
-                              <small class="text-muted">
-                                <strong>Fecha de Inicio:</strong> <%= practicante.fecha_inicio ? new Date(practicante.fecha_inicio).toLocaleDateString() : 'No especificada' %> 
-                              </small>
-                              <small>
-                                <strong>|</strong>
-                              </small>
-                              <!-- Estado -->
-                              <small class="text-muted">
-                                <strong>Estado:</strong>
-                                <span class="badge <%= practicante.activo ? 'bg-success' : 'bg-danger' %>">
-                                  <%= practicante.activo ? 'Activo' : 'Inactivo' %>
-                                </span>
-                              </small>
-                            </div>
+                      <!-- Imagen del practicante -->
+                      <div class="col-md-1 d-flex align-items-center justify-content-center p-3">
+                        <div class="avatar-container">
+                          <img src="/images/practicantes/<%= practicante.foto_perfil || 'default-avatar.png' %>" 
+                              class="rounded-circle img-fluid" 
+                              alt="<%= practicante.nombre %>" 
+                              style="width: 60px; height: 60px; object-fit: cover;">
                         </div>
                       </div>
-                    <!-- Acciones -->
-                    <div class="col-md-2 d-flex align-items-center justify-content-center">
-                      <div class="d-flex flex-row gap-2">
-                      <!-- Botón para editar -->
-                      <a href="/practicantes/edit/<%= practicante.id %>" class="btn btn-warning btn-sm" title="Editar">
-                        <i class="fas fa-edit"></i> Editar
+                      
+                      <!-- Detalles del practicante -->
+                      <div class="col-md-9">
+                        <div class="card-body py-3">
+                          <h5 class="card-title mb-1 fw-bold"><%= practicante.nombre %></h5>
+                          <div class="d-flex flex-wrap align-items-center mt-2">
+                            <!-- Carrera con icono -->
+                            <div class="me-4 d-flex align-items-center">
+                              <i class="fas fa-graduation-cap text-primary me-1"></i>
+                              <span class="text-secondary"><%= practicante.Carrera ? practicante.Carrera.nombre : 'No especificada' %></span>
+                            </div>
+                            
+                            <!-- Fecha de Inicio con icono -->
+                            <div class="me-4 d-flex align-items-center">
+                              <i class="fas fa-calendar-alt text-primary me-1"></i>
+                              <span class="text-secondary"><%= practicante.fecha_inicio && !isNaN(new Date(practicante.fecha_inicio).getTime()) ? new Date(practicante.fecha_inicio).toLocaleDateString() : 'No especificada' %></span>
+                            </div>
+                            
+                            <!-- Estado con icono -->
+                            <div class="d-flex align-items-center">
+                              <i class="fas fa-circle me-1" style="font-size: 0.6rem; color: <%= practicante.activo ? '#28a745' : '#dc3545' %>"></i>
+                              <span class="badge <%= practicante.activo ? 'text-bg-success' : 'text-bg-danger' %> rounded-pill">
+                                <%= practicante.activo ? 'Activo' : 'Inactivo' %>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Acciones -->
+                      <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
+                        <div class="d-flex gap-2">
+                          <!-- Botón para editar con estilo mejorado -->
+                          <a href="/practicantes/edit/<%= practicante.id %>" class="btn btn-outline-primary btn-sm rounded-pill" title="Editar practicante">
+                            <i class="fas fa-edit me-md-1"></i><span class="d-none d-lg-inline">Editar</span>
+                          </a>
+                          <!-- Botón para eliminar con estilo mejorado -->
+                          <form
+                            action="/practicantes/delete/<%= practicante.id %>?_method=DELETE&page=<%= currentPage %>&nombre=<%= selectedNombre || '' %>&carrera=<%= selectedCarrera || '' %>&estado=<%= selectedEstado || '' %>"
+                            method="POST"
+                            onsubmit="return confirm('¿Estás seguro de que deseas eliminar este practicante?')"
+                          >
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill" title="Eliminar practicante">
+                              <i class="fas fa-trash-alt me-md-1"></i><span class="d-none d-lg-inline">Eliminar</span>
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="col-12">
+              <div class="alert alert-warning text-center shadow-sm border-0" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                No hay practicantes registrados.
+              </div>
+            </div>
+          <% } %>
+        </div>        
+        <!-- Listado de practicantes - Vista Cuadrícula (visible por defecto) con diseño mejorado -->
+        <div id="grid-view" class="row g-4 mt-4">
+          <% if (practicantes.length > 0) { %>
+            <% practicantes.forEach((practicante, index) => { %>
+              <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                <div class="card border-0 shadow-sm h-100 hover-card">
+                  
+                  <!-- Foto o Avatar (posición absoluta sobre el degradado) -->
+                  <div class="text-center position-relative mt-n5 mb-3">
+                    <div class="avatar-container mx-auto border-4 border-white" style="width: 110px; height: 110px; border-radius: 50%; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                      <img src="/images/practicantes/<%= practicante.foto_perfil || 'default-avatar.png' %>" 
+                           class="w-100 h-100"
+                           alt="<%= practicante.nombre %>" 
+                           style="object-fit: cover;">
+                    </div>
+                    <!-- Indicador de estado (posición absoluta sobre la imagen) -->
+                    <div class="position-absolute bottom-0 end-0 translate-middle-x">
+                      <span class="badge rounded-pill <%= practicante.activo ? 'bg-success' : 'bg-danger' %> border border-2 border-white shadow-sm" 
+                            style="font-size: 0.7rem; padding: 0.35rem 0.65rem;">
+                        <%= practicante.activo ? 'Activo' : 'Inactivo' %>
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <!-- Detalles del practicante con mejor diseño -->
+                  <div class="card-body text-center pt-0">
+                    <h5 class="card-title fw-bold mb-3"><%= practicante.nombre %></h5>
+                    
+                    <div class="mb-3">
+                      <!-- Carrera con icono -->
+                      <div class="d-flex align-items-center justify-content-center mb-2">
+                        <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                        <span class="text-muted"><%= practicante.Carrera ? practicante.Carrera.nombre : 'No especificada' %></span>
+                      </div>
+                      
+                      <!-- Fecha de Inicio con icono -->
+                      <div class="d-flex align-items-center justify-content-center">
+                        <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                        <span class="text-muted"><%= practicante.fecha_inicio && !isNaN(new Date(practicante.fecha_inicio).getTime()) ? new Date(practicante.fecha_inicio).toLocaleDateString() : 'No especificada' %></span>
+                      </div>
+                    </div>
+                    
+                    <!-- Acciones mejoradas -->
+                    <div class="d-flex justify-content-center gap-2 mt-auto pt-3">
+                      <a href="/practicantes/edit/<%= practicante.id %>" class="btn btn-outline-primary btn-sm rounded-pill" title="Editar practicante">
+                        <i class="fas fa-edit me-1"></i> Editar
                       </a>
-                      <!-- Botón para eliminar -->
                       <form
                         action="/practicantes/delete/<%= practicante.id %>?_method=DELETE&page=<%= currentPage %>&nombre=<%= selectedNombre || '' %>&carrera=<%= selectedCarrera || '' %>&estado=<%= selectedEstado || '' %>"
                         method="POST"
                         onsubmit="return confirm('¿Estás seguro de que deseas eliminar este practicante?')"
                       >
-                        <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
-                        <i class="fas fa-trash-alt"></i> Eliminar
+                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill" title="Eliminar practicante">
+                          <i class="fas fa-trash-alt me-1"></i> Eliminar
                         </button>
                       </form>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -140,7 +234,8 @@
             <% }); %>
           <% } else { %>
             <div class="col-12">
-              <div class="alert alert-warning text-center" role="alert">
+              <div class="alert alert-warning text-center shadow-sm border-0" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
                 No hay practicantes registrados.
               </div>
             </div>
@@ -152,3 +247,135 @@
 </div>
 
 <%- include('partials/footer') %>
+
+<style>
+  /* Estilos adicionales para mejorar la experiencia visual */
+  .hover-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent !important;
+  }
+  
+  .hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(37, 117, 252, 0.2) !important;
+  }
+  
+  /* Estilo para los botones dentro de las tarjetas */
+  .card .btn {
+    transition: all 0.2s ease;
+  }
+  
+  /* Añadir separación visual entre elementos */
+  .form-group:focus-within label {
+    color: #2575fc !important;
+    font-weight: bold !important;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.15);
+  }
+  
+  /* Efectos de hover más sutiles para botones */
+  .btn-outline-primary:hover {
+    background-color: rgba(37, 117, 252, 0.1);
+    color: #2575fc;
+    border-color: #2575fc;
+  }
+  
+  .btn-outline-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+    border-color: #dc3545;
+  }
+  
+  /* Mejorar visualización en pantallas pequeñas */
+  @media (max-width: 768px) {
+    .card-body {
+      padding: 1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 0.5rem !important;
+    }
+  }
+  
+  /* Estilo para el avatar con borde */
+  .avatar-container {
+    border-style: solid;
+    border-width: 3px;
+    border-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .hover-card:hover .avatar-container {
+    box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+  }
+  
+  /* Efecto de focus para los campos de filtro */
+  .input-group:focus-within {
+    box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.15);
+    border-radius: 0.25rem;
+  }
+  
+  /* Mejoras de accesibilidad */
+  .btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.25) !important;
+  }
+</style>
+
+<script>
+  // Script para alternar entre vista de lista y vista de cuadrícula
+  document.addEventListener('DOMContentLoaded', function() {
+    const gridViewBtn = document.getElementById('gridView');
+    const listViewBtn = document.getElementById('listView');
+    const gridViewContainer = document.getElementById('grid-view');
+    const listViewContainer = document.getElementById('list-view');
+    
+    // Función para cambiar a vista de cuadrícula
+    gridViewBtn.addEventListener('click', function() {
+      listViewContainer.style.display = 'none';
+      gridViewContainer.style.display = 'flex';
+      
+      // Actualizar estados de botones
+      gridViewBtn.classList.add('active');
+      listViewBtn.classList.remove('active');
+      
+      // Guardar preferencia en localStorage
+      localStorage.setItem('practicantesViewMode', 'grid');
+    });
+    
+    // Función para cambiar a vista de lista
+    listViewBtn.addEventListener('click', function() {
+      gridViewContainer.style.display = 'none';
+      listViewContainer.style.display = 'block';
+      
+      // Actualizar estados de botones
+      listViewBtn.classList.add('active');
+      gridViewBtn.classList.remove('active');
+      
+      // Guardar preferencia en localStorage
+      localStorage.setItem('practicantesViewMode', 'list');
+    });
+    
+    // Cargar preferencia guardada del usuario si existe
+    const savedViewMode = localStorage.getItem('practicantesViewMode');
+    if (savedViewMode === 'list') {
+      listViewBtn.click();
+    } else {
+      // Si no hay preferencia guardada o la preferencia es 'grid', mostrar vista de cuadrícula (por defecto)
+      gridViewBtn.classList.add('active');
+      listViewBtn.classList.remove('active');
+      localStorage.setItem('practicantesViewMode', 'grid');
+    }
+    
+    // Añadir efecto de animación al cargar la página
+    setTimeout(() => {
+      document.querySelectorAll('.hover-card').forEach(card => {
+        card.style.opacity = '1';
+      });
+    }, 100);
+  });
+</script>

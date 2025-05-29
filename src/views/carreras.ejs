@@ -17,56 +17,59 @@
     <!-- Contenido principal -->
     <div id="mainContent" class="col px-5">
       <main class="py-4">
-         <!-- Filtros -->
-    <div class="row mb-4 mt-1 align-items-center">
-      <!-- Botones de vista -->
-      <div class="col-auto mt-4 d-flex align-items-center gap-1">
-        <button id="toggleView" class="btn btn-secondary" title="Vista de cuadrícula">
-          <i class="fas fa-th-large"></i>
-        </button>
-        <button id="listView" class="btn btn-secondary" title="Vista de lista">
-          <i class="fas fa-list"></i>
-        </button>
-      </div>
-    
-      <!-- Formulario de filtros -->
-      <form action="/carreras" method="GET" class="col d-flex align-items-center flex-wrap gap-3">
-        <!-- Filtro por nombre -->
-        <div class="flex-grow-1">
-          <label for="nombre" class="form-label mb-0">Nombre</label>
-          <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Buscar por nombre" value="<%= selectedNombre || '' %>">
+        <!-- Filtros -->
+        <div class="row mb-4 mt-1 align-items-center">
+          <!-- Botones de vista -->
+          <div class="col-auto mt-3 d-flex align-items-center gap-2">
+            <button id="toggleView" class="btn btn-secondary" title="Vista de cuadrícula">
+              <i class="fas fa-th-large"></i>
+            </button>
+            <button id="listView" class="btn btn-secondary" title="Vista de lista">
+              <i class="fas fa-list"></i>
+            </button>
+          </div>
+        
+          <!-- Formulario de filtros -->
+          <form action="/carreras" method="GET" class="col d-flex align-items-center flex-wrap gap-3 justify-content-end">
+            <!-- Filtro por nombre -->
+            <div class="form-group mb-0">
+              <label for="nombre" class="form-label mb-0 small">Nombre</label>
+              <input type="text" name="nombre" id="nombre" class="form-control form-control-sm" placeholder="Buscar por nombre" value="<%= selectedNombre || '' %>" onchange="this.form.submit()">
+            </div>
+        
+            <!-- Filtro por estado -->
+            <div class="form-group mb-0">
+              <label for="estado" class="form-label mb-0 small">Estado</label>
+              <select name="estado" id="estado" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="activo" <%= selectedEstado === 'activo' ? 'selected' : '' %>>Activo</option>
+                <option value="inactivo" <%= selectedEstado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
+              </select>
+            </div>
+        
+            <!-- Filtro por límite de carreras -->
+            <div class="form-group mb-0">
+              <label for="limit" class="form-label mb-0 small">Carreras por página</label>
+              <select name="limit" id="limit" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="2" <%= limit == 2 ? 'selected' : '' %>>2</option>
+                <option value="4" <%= limit == 4 ? 'selected' : '' %>>4</option>
+                <option value="6" <%= limit == 6 ? 'selected' : '' %>>6</option>
+                <option value="10" <%= limit == 10 ? 'selected' : '' %>>10</option>
+              </select>
+            </div>
+        
+            <!-- Botón para limpiar filtros -->
+            <div class="form-group mb-0">
+              <label class="form-label mb-0 small d-block">&nbsp;</label>
+              <a href="/carreras" class="btn btn-secondary btn-sm">
+                <i class="fas fa-redo"></i> Limpiar Filtros
+              </a>
+            </div>
+
+          </form>
         </div>
-    
-        <!-- Filtro por estado -->
-        <div class="flex-grow-1">
-          <label for="estado" class="form-label mb-0">Estado</label>
-          <select name="estado" id="estado" class="form-select">
-            <option value="">Todos</option>
-            <option value="activo" <%= selectedEstado === 'activo' ? 'selected' : '' %>>Activo</option>
-            <option value="inactivo" <%= selectedEstado === 'inactivo' ? 'selected' : '' %>>Inactivo</option>
-          </select>
-        </div>
-    
-        <!-- Botones de acción -->
-        <div class="col-auto d-flex align-items-center mt-4 gap-2">
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-filter"></i> Aplicar Filtros
-          </button>
-          <a href="/carreras" class="btn btn-secondary">
-            <i class="fas fa-redo"></i> Limpiar Filtros
-          </a>
-        </div>
-    
-        <!-- Botón para agregar carrera -->
-        <div class="col-auto mt-4 ms-auto">
-          <a href="/carreras/create" class="btn btn-success">
-            <i class="fas fa-plus-circle"></i> Agregar Carrera
-          </a>
-        </div>
-      </form>
-    </div>
         <!-- Listado de carreras -->
-        <div class="row g-4">
+        <div class="row g-4 mt-3">
           <% if (carreras.length > 0) { %>
             <% carreras.forEach((carrera, index) => { %>
               <div class="col-12">
@@ -75,16 +78,15 @@
                     <!-- Detalles de la carrera -->
                     <div class="col-md-10">
                       <div class="card-body">
-                        <h5 class="card-title text-primary"><%= carrera.nombre %></h5>
-                        <div class="text-muted small d-flex gap-3">
+                        <h5 class="card-title text-primary"><%= carrera.nombre %></h5>                        <div class="text-muted small d-flex gap-3">
                           <small class="text-muted">
-                            Creado: <%= new Date(carrera.creado_en).toLocaleDateString() %> 
+                            Creado: <%= carrera.creado_en && !isNaN(new Date(carrera.creado_en).getTime()) ? new Date(carrera.creado_en).toLocaleDateString() : 'No especificado' %> 
                           </small>
                            <small>
                             <strong>|</strong>
                           </small>
                           <small class="text-muted">
-                            Actualizado: <%= new Date(carrera.actualizado_en).toLocaleDateString() %>
+                            Actualizado: <%= carrera.actualizado_en && !isNaN(new Date(carrera.actualizado_en).getTime()) ? new Date(carrera.actualizado_en).toLocaleDateString() : 'No especificado' %>
                           </small>
                           <small>
                             <strong>|</strong>

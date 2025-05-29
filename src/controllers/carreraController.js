@@ -4,10 +4,10 @@ const { Op } = require('sequelize');
 const carreraController = {
 
     // Listar todas las carreras
-    async index(req, res) {
+       async index(req, res) {
         try {
-            const { nombre, estado } = req.query;
-
+            const { nombre, estado, limit } = req.query;
+    
             // Construir condiciones de búsqueda
             const where = {};
             if (nombre) {
@@ -16,22 +16,27 @@ const carreraController = {
             if (estado) {
                 where.activo = estado === 'activo'; // Filtrar por estado
             }
-
+    
             // Obtener carreras filtradas
-            const carreras = await Carrera.findAll({ where });
-
+            const carreras = await Carrera.findAll({
+                where,
+                limit: parseInt(limit) || 6
+            });
+    
             // Pasar las variables a la vista
-            const error = req.flash('error'); // Obtén los mensajes de error
-            const success = req.flash('success'); // Obtén los mensajes de éxito
-
+            const error = req.flash('error');
+            const success = req.flash('success');
+    
             res.render('carreras', {
                 carreras,
-                selectedNombre: nombre || '', // Pasar el filtro de nombre
-                selectedEstado: estado || '', // Pasar el filtro de estado
+                selectedNombre: nombre || '',
+                selectedEstado: estado || '',
+                where,
+                limit: parseInt(limit) || 2,
                 userRole: req.user ? req.user.rol : null,
                 activePage: 'carreras',
-                error: error.length > 0 ? error[0] : null, // Pasa el mensaje de error
-                success: success.length > 0 ? success[0] : null, // Pasa el mensaje de éxito
+                error: error.length > 0 ? error[0] : null,
+                success: success.length > 0 ? success[0] : null,
             });
         } catch (err) {
             console.error('Error al listar las carreras:', err);

@@ -18,13 +18,13 @@
         <% if (currentVista === 'practicantes') { %>
           <li><a class="dropdown-item" href="/practicantes/create">Agregar Practicante</a></li>
         <% } else if (currentVista === 'carreras') { %>
-          <li><a class="dropdown-item" href="/carreras/configuracion">Configurar Carreras</a></li>
-          <li><a class="dropdown-item" href="/carreras/reportes">Generar Reportes</a></li>
+          <li><a class="dropdown-item" href="/carreras/create">Agregar Carrera</a></li>
         <% } else if (currentVista === 'dashboard') { %>
-          <li><a class="dropdown-item" href="/dashboard/configuracion">Configurar Dashboard</a></li>
-          <li><a class="dropdown-item" href="/dashboard/reportes">Generar Reportes</a></li>
+          <li><a class="dropdown-item" href="#">Configurar Dashboard</a></li>
+        <% } else if (currentVista === 'asistencias') { %>
+          <li><a class="dropdown-item" href="#">Configurar Asistencias</a></li>
         <% } else { %>
-          <li><a class="dropdown-item" href="/configuracion/general">Configuración General</a></li>
+          <li><a class="dropdown-item" href="#">Configuración General</a></li>
         <% } %>
       </ul>
   </div>

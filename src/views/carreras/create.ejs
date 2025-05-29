@@ -1,76 +1,82 @@
 <%- include('../partials/header') %>
 
-<!-- Contenedor principal -->
 <div class="container-fluid">
-  <div class="row flex-nowrap">
+  <div class="row">
     <!-- Sidebar -->
-    <div class="col-auto p-0 bg-light border-end collapse d-md-block" id="sidebarContent">
+    <div class="col-auto p-0 bg-light border-end">
       <%- include('../partials/sidebar') %>
     </div>
-
     <!-- Contenido principal -->
-    <div class="col px-4">
-      <main class="py-4">
-        <div
-          class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Agregar Nueva Carrera</h1>
+    <div id="mainContent" class="col px-3">
+      <main class="py-3">
+        <div class="card shadow-sm p-3" style="width: 70%; margin: auto;">
+          <form action="/carreras" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-12 text-center mb-4">
+                <h1 class="text-primary fs-4 fw-bold">Registrar Carrera</h1>
+                <p class="text-muted fs-6">Complete el formulario para agregar una nueva carrera.</p>
+                <hr class="my-3">
+              </div>
+              <!-- Sección: Información de la Carrera -->
+              <div class="col-md-6">
+                <h2 class="text-secondary fs-5 mb-2">Datos principales</h2>
+                <div class="mb-3">
+                  <label for="nombre" class="form-label small">Nombre de la carrera <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                    <input
+                      type="text"
+                      id="nombre"
+                      name="nombre"
+                      class="form-control form-control-sm"
+                      placeholder="Nombre de la carrera"
+                      value="<%= typeof oldData !== 'undefined' ? oldData.nombre : '' %>"
+                      required
+                    >
+                  </div>
+                  <div class="invalid-feedback">Por favor, ingresa el nombre de la carrera.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="descripcion" class="form-label small">Descripción</label>
+                  <textarea
+                    id="descripcion"
+                    name="descripcion"
+                    class="form-control form-control-sm"
+                    placeholder="Descripción opcional"
+                    rows="4"
+                  ><%= typeof oldData !== 'undefined' ? oldData.descripcion : '' %></textarea>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h2 class="text-secondary fs-5 mb-2">Imagen</h2>
+                <div class="mb-3">
+                  <label for="imagen" class="form-label small">Imagen de la carrera <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-image"></i></span>
+                    <input
+                      type="file"
+                      id="imagen"
+                      name="imagen"
+                      class="form-control form-control-sm"
+                      accept="image/*"
+                      required
+                    >
+                  </div>
+                  <div class="invalid-feedback">Por favor, selecciona una imagen.</div>
+                </div>
+              </div>
+            </div>
+            <!-- Botones -->
+            <div class="d-flex justify-content-center gap-5 mt-3">
+              <button type="submit" class="btn btn-primary btn-sm px-4 py-2 shadow-sm">
+                <i class="fas fa-save"></i> Guardar
+              </button>
+              <a href="/carreras" class="btn btn-outline-secondary btn-sm px-4 py-2 shadow-sm">
+                <i class="fas fa-arrow-left"></i> Cancelar
+              </a>
+            </div>
+          </form>
         </div>
-
-        <!-- Mostrar mensajes de error o éxito -->
-        <% if (errorMessage) { %>
-          <div class="alert alert-danger"><%= errorMessage %></div>
-        <% } %>
-        <% if (successMessage) { %>
-          <div class="alert alert-success"><%= successMessage %></div>
-        <% } %>
-
-        <!-- Formulario para agregar una nueva carrera -->
-        <form action="/carreras" method="POST" enctype="multipart/form-data">
-          <!-- Nombre -->
-          <div class="form-group mb-3">
-            <label for="nombre" class="form-label">Nombre de la carrera:</label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              class="form-control"
-              placeholder="Ingresa el nombre de la carrera"
-              value="<%= typeof oldData !== 'undefined' ? oldData.nombre : '' %>"
-              required
-            />
-          </div>
-
-          <!-- Imagen -->
-          <div class="form-group mb-3">
-            <label for="imagen" class="form-label">Imagen de la carrera:</label>
-            <input
-              type="file"
-              id="imagen"
-              name="imagen"
-              class="form-control"
-              accept="image/*"
-              required
-            />
-          </div>
-
-          <!-- Descripción -->
-          <div class="form-group mb-3">
-            <label for="descripcion" class="form-label">Descripción:</label>
-            <textarea
-              id="descripcion"
-              name="descripcion"
-              class="form-control"
-              placeholder="Ingresa una descripción opcional"
-              rows="4"
-            ><%= typeof oldData !== 'undefined' ? oldData.descripcion : '' %></textarea>
-          </div>
-
-          <!-- Botones -->
-          <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Guardar</button>
-            <a href="/carreras" class="btn btn-secondary">Volver al listado</a>
-          </div>
-        </form>
       </main>
     </div>
   </div>

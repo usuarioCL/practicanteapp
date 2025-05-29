@@ -16,18 +16,22 @@
         }) %>
 
         <!-- Contenido principal -->
-        <main class="col-12 col-md-9 col-lg-10 ms-sm-auto px-4 py-4">
-            <h2>Detalles del Practicante</h2>
+        <main class="col-12 col-md-9 col-lg-10 ms-sm-auto px-4 py-4">            <h2>Detalles del Practicante</h2>
 
             <ul class="list-group">
-                <li class="list-group-item"><strong>Nombre:</strong> <%= practicante.nombre_practicante %></li>
-                <li class="list-group-item"><strong>Correo:</strong> <%= practicante.correo %></li>
-                <li class="list-group-item"><strong>Teléfono:</strong> <%= practicante.telefono %></li>
-                <li class="list-group-item"><strong>Carrera:</strong> <%= practicante.carrera ? practicante.carrera.nombre_carrera : 'N/A' %></li>
-                <li class="list-group-item"><strong>Fecha de inicio:</strong> <%= practicante.fecha_inicio.toISOString().split('T')[0] %></li>
+                <li class="list-group-item"><strong>Nombre:</strong> <%= practicante.nombre %></li>
+                <li class="list-group-item"><strong>Correo:</strong> <%= practicante.email %></li>
+                <li class="list-group-item"><strong>Teléfono:</strong> <%= practicante.telefono || 'No especificado' %></li>
+                <li class="list-group-item"><strong>Carrera:</strong> <%= practicante.Carrera ? practicante.Carrera.nombre : 'No especificada' %></li>
+                <li class="list-group-item"><strong>Tipo de Documento:</strong> <%= practicante.TipoDocumento ? practicante.TipoDocumento.tipo : 'No especificado' %></li>
+                <li class="list-group-item"><strong>Número de Documento:</strong> <%= practicante.numero_documento || 'No especificado' %></li>
+                <li class="list-group-item"><strong>Fecha de inicio:</strong> <%= practicante.fecha_inicio && !isNaN(new Date(practicante.fecha_inicio).getTime()) ? new Date(practicante.fecha_inicio).toISOString().split('T')[0] : 'No especificada' %></li>
+                <li class="list-group-item"><strong>Estado:</strong> <span class="badge <%= practicante.activo ? 'bg-success' : 'bg-danger' %>">
+                  <%= practicante.activo ? 'Activo' : 'Inactivo' %>
+                </span></li>
             </ul>
 
-            <a href="/practicantes/edit/<%= practicante.id_practicante %>" class="btn btn-warning mt-3">Editar</a>
+            <a href="/practicantes/edit/<%= practicante.id %>" class="btn btn-warning mt-3">Editar</a>
             <a href="/practicantes" class="btn btn-secondary mt-3">Volver a la lista</a>
         </main>
 

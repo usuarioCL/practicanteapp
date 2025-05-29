@@ -9,8 +9,14 @@
     <!-- Contenido principal -->
     <div id="mainContent" class="col px-3">
       <main class="py-3">
-        <!-- Formulario para editar practicante -->
-        <div class="card shadow-sm p-3" style="width: 70%; margin: auto;">
+        <!-- Formulario para editar practicante -->        <div class="card shadow-sm p-3" style="width: 70%; margin: auto;">
+          <!-- Mensaje de error -->
+          <% if (typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <%= error %>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
           <form action="/practicantes/update/<%= practicante.id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
             <div class="row">
               <div class="col-md-12 text-center mb-4">
@@ -20,35 +26,32 @@
               </div>
               <!-- Sección: Información Personal -->
               <div class="col-md-6">
-                <h2 class="text-secondary fs-5 mb-2">Información Personal</h2>
-                <div class="row mb-2">
+                <h2 class="text-secondary fs-5 mb-2">Información Personal</h2>                <div class="row mb-2">
                   <label for="nombre" class="form-label small">Nombre:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-user"></i></span>
-                    <input type="text" id="nombre" name="nombre" class="form-control form-control-sm" placeholder="Nombre completo" value="<%= practicante.nombre %>" required>
+                    <input type="text" id="nombre" name="nombre" class="form-control form-control-sm" placeholder="Nombre completo" value="<%= typeof formData !== 'undefined' ? formData.nombre : practicante.nombre %>" required>
                   </div>
                   <div class="invalid-feedback">Por favor, ingresa el nombre.</div>
-                </div>
-                <div class="row mb-2">
+                </div>                <div class="row mb-2">
                   <label for="email" class="form-label small">Email:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                    <input type="email" id="email" name="email" class="form-control form-control-sm" placeholder="usuario@correo.com" value="<%= practicante.email %>" required>
+                    <input type="email" id="email" name="email" class="form-control form-control-sm" placeholder="usuario@correo.com" value="<%= typeof formData !== 'undefined' ? formData.email : practicante.email %>" required>
                   </div>
                   <div class="invalid-feedback">Por favor, ingresa un email válido.</div>
-                </div>
-                <div class="row mb-2">
+                </div>                <div class="row mb-2">
                   <label for="telefono" class="form-label small">Teléfono:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                    <input type="text" id="telefono" name="telefono" class="form-control form-control-sm" placeholder="+51 987654321" value="<%= practicante.telefono %>">
+                    <input type="text" id="telefono" name="telefono" class="form-control form-control-sm" placeholder="+51 987654321" value="<%= typeof formData !== 'undefined' ? formData.telefono : practicante.telefono %>">
                   </div>
                 </div>
                 <div class="row mb-2">
                   <label for="direccion" class="form-label small">Dirección:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                    <input type="text" id="direccion" name="direccion" class="form-control form-control-sm" placeholder="Dirección" value="<%= practicante.direccion %>">
+                    <input type="text" id="direccion" name="direccion" class="form-control form-control-sm" placeholder="Dirección" value="<%= typeof formData !== 'undefined' ? formData.direccion : practicante.direccion %>">
                   </div>
                 </div>
                 <div class="row mb-2">
@@ -62,21 +65,19 @@
                       <option value="otro" <%= practicante.genero === 'otro' ? 'selected' : '' %>>Otro</option>
                     </select>
                   </div>
-                </div>
-                <div class="row mb-2">
+                </div>                <div class="row mb-2">
                   <label for="fecha_nacimiento" class="form-label small">Fecha de nacimiento:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="form-control form-control-sm" value="<%= practicante.fecha_nacimiento ? new Date(practicante.fecha_nacimiento).toISOString().split('T')[0] : '' %>">
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" class="form-control form-control-sm" value="<%= typeof formData !== 'undefined' ? formData.fecha_nacimiento || '' : (practicante.fecha_nacimiento && !isNaN(new Date(practicante.fecha_nacimiento).getTime()) ? new Date(practicante.fecha_nacimiento).toISOString().split('T')[0] : '') %>">
                   </div>
-                </div>
-                <div class="row mb-2">
+                </div>                <div class="row mb-2">
                   <label for="tipo_documento_id" class="form-label small">Tipo de Documento:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                     <select id="tipo_documento_id" name="tipo_documento_id" class="form-select form-select-sm">
                       <% tiposDocumento.forEach(tipo => { %>
-                        <option value="<%= tipo.id %>" <%= practicante.tipo_documento_id === tipo.id ? 'selected' : '' %>><%= tipo.nombre %></option>
+                        <option value="<%= tipo.id %>" <%= practicante.tipo_documento_id === tipo.id ? 'selected' : '' %>><%= tipo.tipo %></option>
                       <% }) %>
                     </select>
                   </div>
@@ -85,9 +86,13 @@
                   <label for="numero_documento" class="form-label small">Número de Documento:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-id-card-alt"></i></span>
-                    <input type="text" id="numero_documento" name="numero_documento" class="form-control form-control-sm" placeholder="Número de documento" value="<%= practicante.numero_documento %>" required>
+                    <input type="text" id="numero_documento" name="numero_documento" class="form-control form-control-sm <%= typeof error !== 'undefined' && error.includes('número de documento') ? 'is-invalid' : '' %>" placeholder="Número de documento" value="<%= typeof formData !== 'undefined' ? formData.numero_documento : practicante.numero_documento %>" required>
+                    <% if (typeof error !== 'undefined' && error.includes('número de documento')) { %>
+                      <div class="invalid-feedback">El número de documento ya está en uso.</div>
+                    <% } else { %>
+                      <div class="invalid-feedback">Por favor, ingresa el número de documento.</div>
+                    <% } %>
                   </div>
-                  <div class="invalid-feedback">Por favor, ingresa el número de documento.</div>
                 </div>
                 <div class="row mb-2">
                   <label for="foto_perfil" class="form-label small">Foto de Perfil:</label>
@@ -119,19 +124,18 @@
                     </select>
                   </div>
                 </div>
-                <h2 class="text-secondary fs-5 mt-3 mb-2">Fechas y Estado</h2>
-                <div class="row mb-2">
+                <h2 class="text-secondary fs-5 mt-3 mb-2">Fechas y Estado</h2>                <div class="row mb-2">
                   <label for="fecha_inicio" class="form-label small">Fecha de Inicio:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-calendar-check"></i></span>
-                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" value="<%= practicante.fecha_inicio ? new Date(practicante.fecha_inicio).toISOString().split('T')[0] : '' %>" required>
+                    <input type="date" id="fecha_inicio" name="fecha_inicio" class="form-control form-control-sm" value="<%= typeof formData !== 'undefined' ? formData.fecha_inicio || '' : (practicante.fecha_inicio && !isNaN(new Date(practicante.fecha_inicio).getTime()) ? new Date(practicante.fecha_inicio).toISOString().split('T')[0] : '') %>" required>
                   </div>
                 </div>
                 <div class="row mb-2">
                   <label for="fecha_fin" class="form-label small">Fecha de Fin:</label>
                   <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
-                    <input type="date" id="fecha_fin" name="fecha_fin" class="form-control form-control-sm" value="<%= practicante.fecha_fin ? new Date(practicante.fecha_fin).toISOString().split('T')[0] : '' %>">
+                    <input type="date" id="fecha_fin" name="fecha_fin" class="form-control form-control-sm" value="<%= typeof formData !== 'undefined' ? formData.fecha_fin || '' : (practicante.fecha_fin && !isNaN(new Date(practicante.fecha_fin).getTime()) ? new Date(practicante.fecha_fin).toISOString().split('T')[0] : '') %>">
                   </div>
                 </div>
                 
@@ -152,10 +156,13 @@
               </div>
               </div>
 
-              
-
-              <!-- Botones -->
+                  <!-- Botones -->
               <div class="d-flex justify-content-center gap-5 mt-3">
+                <% if (typeof error !== 'undefined' && error.includes('número de documento')) { %>
+                  <button type="button" id="generarDocumento" class="btn btn-info btn-sm px-4 py-2 shadow-sm">
+                    <i class="fas fa-random"></i> Generar Nuevo Número
+                  </button>
+                <% } %>
                 <button type="submit" class="btn btn-primary btn-sm px-4 py-2 shadow-sm">
                 <i class="fas fa-save"></i> Actualizar
                 </button>
@@ -170,5 +177,19 @@
     </div>
   </div>
 </div>
+
+<script>
+  // Script para generar número de documento aleatorio
+  document.addEventListener('DOMContentLoaded', function() {
+    const btnGenerarDocumento = document.getElementById('generarDocumento');
+    if (btnGenerarDocumento) {
+      btnGenerarDocumento.addEventListener('click', function() {
+        // Generar un número aleatorio de 8 dígitos
+        const nuevoNumero = Math.floor(10000000 + Math.random() * 90000000);
+        document.getElementById('numero_documento').value = nuevoNumero;
+      });
+    }
+  });
+</script>
 
 <%- include('../partials/footer') %>
